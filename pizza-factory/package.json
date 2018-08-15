@@ -7,7 +7,13 @@
     "test": "jasmine-ts spec/**/*.spec.ts"
   },
   "dependencies": {
-    "assistant-source": "^0.4.0",
+    "assistant-apiai": "internal",
+    "assistant-alexa": "internal",
+    "assistant-authentication": "internal",
+    "assistant-generic-utterances": "^0.5.0",
+    "assistant-google": "internal",
+    "assistant-source": "internal",
+    "assistant-validations": "internal",
     "inversify-components": "^0.4.0",
     "inversify": "4.1.1",
     "reflect-metadata": "^0.1.12",
