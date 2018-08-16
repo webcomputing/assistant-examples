@@ -1,5 +1,6 @@
 import { AssistantJSConfiguration } from "assistant-source";
-
+import { AlexaConfigurationAttribute } from "assistant-alexa";
+import { ApiaiConfigurationAttribute } from "assistant-apiai";
 /*
  * In AssistantJS, every component may have it's own configuration settings. For example,
  * the interface "I18nConfiguration" describes the configuration of AssistantJS's internal
@@ -12,7 +13,7 @@ import { AssistantJSConfiguration } from "assistant-source";
  * > import { AlexaConfigurationAttribute } from "assistant-alexa";
  * > const configuration: AssistantJSConfiguration & AlexaConfigurationAttribute = ...
  */
-const configuration: AssistantJSConfiguration = {
+const configuration: AssistantJSConfiguration & AlexaConfigurationAttribute & ApiaiConfigurationAttribute = {
   /** Configuration of AssistantJS's i18n component (interface = I18nConfiguration) */
   "core:i18n": {
     // This is basically the i18next configuration. Check out https://www.i18next.com/ for more information!
@@ -29,6 +30,19 @@ const configuration: AssistantJSConfiguration = {
   },
   
   // There are also other settings available. Just have a look at the "AssistantJSConfiguration" interface.
+  "alexa": {
+    applicationID: "amzn1.ask.skill.b65ad48a-e27e-4c0e-ba68-f687d18bf769",
+    route: "/alexa",
+    useVerifier: false,
+    invocationName: "pizza factory",
+  },
+
+  "apiai": {
+    route: "/apiai",
+    authenticationHeaders: {
+      "myFirstSecretHeader": "myVerySecretValue", 
+      "mySecondSecretHeader": "mySecondVerySecretValue"}
+  },
 };
 
 // The linking between your configuration and your application is done in your index.ts
