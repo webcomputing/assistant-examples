@@ -1,4 +1,9 @@
 import { AssistantJSSetup, FilterSetup, StateMachineSetup } from "assistant-source";
+import { descriptor as alexaDescriptor } from "assistant-alexa";
+import { descriptor as validationsDescriptor } from "assistant-validations";
+import { descriptor as apiAiDescriptor } from "assistant-apiai";
+import { descriptor as genericUtterancesDescriptor } from "assistant-generic-utterances";
+import { descriptor as googleAssistantDescriptor } from "assistant-google";
 import componentConfiguration from "./config/components";
 
 /** 
@@ -19,7 +24,12 @@ export const filterSetup = new FilterSetup(assistantJs);
  */
 export function initializeSetups (localAssistantJs: AssistantJSSetup, localStateMachineSetup: StateMachineSetup, localFilterSetup: FilterSetup, addOnly = false) {
   // Register all additional AssistantJS components - currently none
-
+  assistantJs.registerComponent(alexaDescriptor);
+  assistantJs.registerComponent(validationsDescriptor);
+  assistantJs.registerComponent(apiAiDescriptor);
+  assistantJs.registerComponent(genericUtterancesDescriptor);
+  assistantJs.registerComponent(googleAssistantDescriptor);
+  
   // Configure components
   localAssistantJs.addConfiguration(componentConfiguration);
 

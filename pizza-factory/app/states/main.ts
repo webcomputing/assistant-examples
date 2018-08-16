@@ -23,4 +23,12 @@ export class MainState extends ApplicationState {
   public invokeGenericIntent(machine: Transitionable) {
     this.prompt(this.t());
   }
+
+  public async getIngredients(machine: Transitionable) {
+    this.endSessionWith(this.t());
+  }
+
+  public async addIngredientsToPizza(machine: Transitionable) {
+    this.endSessionWith(this.t());
+  }
 }

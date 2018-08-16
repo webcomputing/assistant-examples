@@ -1,13 +1,8 @@
 {
-    "root": {
-        "cancelGenericIntent": "{Goodbye!|See you later!}",
-        "helpGenericIntent": "I don't know how I can help you out there, sorry..."
-    },
-    "mainState": {
-        "invokeGenericIntent": {
-            "alexa": "Welcome, Alexa user to my pizza factory!",
-            "google": "Welcome, Google user to my pizza factory!"            
-        },
-        "helpGenericIntent": "You can add ingredients to your pizza or get a list of ingredients!"
-    }
+    "getIngredients": [
+        "I want to get {all|the} ingredients"
+    ],
+    "addIngredientsToPizza": [
+        "I want to add ingredients to my pizza"
+    ]
 }
