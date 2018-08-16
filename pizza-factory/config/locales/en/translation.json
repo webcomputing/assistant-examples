@@ -8,10 +8,10 @@
             "alexa": "Welcome, Alexa user to my pizza factory!",
             "google": "Welcome, Google user to my pizza factory!"            
         },
-        "getIngredients": [
+        "getIngredientsIntent": [
             "{Love to help you!|No problem!|You are welcome!|} You can add salami to your pizza!"
         ],
-        "addIngredientsToPizza": [
+        "addIngredientsToPizzaIntent": [
             "{Love to help you!|No problem!|You are welcome!|} Which ingredient do you want to add?"
         ],
         "helpGenericIntent": "You can add ingredients to your pizza or get a list of ingredients!"

@@ -24,11 +24,11 @@ export class MainState extends ApplicationState {
     this.prompt(this.t());
   }
 
-  public async getIngredients(machine: Transitionable) {
+  public async getIngredientsIntent(machine: Transitionable) {
     this.endSessionWith(this.t());
   }
 
-  public async addIngredientsToPizza(machine: Transitionable) {
+  public async addIngredientsToPizzaIntent(machine: Transitionable) {
     this.endSessionWith(this.t());
   }
 }
