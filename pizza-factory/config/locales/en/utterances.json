@@ -1,6 +1,6 @@
 {
     "getIngredientsIntent": [
-        "I want to get {all|the} ingredients"
+        "{I want to get|What are|Give me} {all|the} ingredients"
     ],
     "addIngredientsToPizzaIntent": [
         "I want to add ingredients to my pizza"

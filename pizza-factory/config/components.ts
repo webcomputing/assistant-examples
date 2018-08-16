@@ -13,14 +13,16 @@ import { ApiaiConfigurationAttribute } from "assistant-apiai";
  * > import { AlexaConfigurationAttribute } from "assistant-alexa";
  * > const configuration: AssistantJSConfiguration & AlexaConfigurationAttribute = ...
  */
-const configuration: AssistantJSConfiguration & AlexaConfigurationAttribute & ApiaiConfigurationAttribute = {
+const configuration: AssistantJSConfiguration &
+  AlexaConfigurationAttribute &
+  ApiaiConfigurationAttribute = {
   /** Configuration of AssistantJS's i18n component (interface = I18nConfiguration) */
   "core:i18n": {
     // This is basically the i18next configuration. Check out https://www.i18next.com/ for more information!
     i18nextAdditionalConfiguration: {
       // This entry is needed and tells i18next where to find your language files.
       backend: {
-        loadPath: process.cwd() + "/config/locales/{{lng}}/{{ns}}.json",
+        loadPath: process.cwd() + "/config/locales/{{lng}}/{{ns}}.json"
       },
       lngs: ["en"],
       fallbackLng: "en",
@@ -28,21 +30,51 @@ const configuration: AssistantJSConfiguration & AlexaConfigurationAttribute & Ap
       debug: false
     }
   },
-  
+
   // There are also other settings available. Just have a look at the "AssistantJSConfiguration" interface.
-  "alexa": {
+  alexa: {
     applicationID: "amzn1.ask.skill.b65ad48a-e27e-4c0e-ba68-f687d18bf769",
     route: "/alexa",
     useVerifier: false,
     invocationName: "pizza factory",
+    entities: {
+      ASSISTANT_FOOD: "AMAZON.Food"
+    }
   },
 
-  "apiai": {
+  apiai: {
     route: "/apiai",
+    entities: {
+      ASSISTANT_FOOD: "@sys.any"
+    },
     authenticationHeaders: {
-      "myFirstSecretHeader": "myVerySecretValue", 
-      "mySecondSecretHeader": "mySecondVerySecretValue"}
+      myFirstSecretHeader: "myVerySecretValue",
+      mySecondSecretHeader: "mySecondVerySecretValue"
+    }
   },
+
+  "core:unifier": {
+    entities: {
+      ASSISTANT_FOOD: ["ingredients"],
+    },
+    /* entitySets: {
+      ingredients: {
+        mapsTo: "LITERAL",
+        values: {
+          en: [
+            {
+              value: "cheese",
+              synonyms: ["gouda"]
+            },
+            {
+              value: "salami",
+              synonyms: [""]
+            }
+          ]
+        }
+      }
+    } */
+  }
 };
 
 // The linking between your configuration and your application is done in your index.ts
