@@ -21,7 +21,7 @@
             "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} I add {{ingredient}} to you pizza! Do you want to add another ingredient to your pizza?"
         ],
         "yesGenericIntent": "{Alright|Okay}! Lets add another ingredient to your pizza!",
-        "noGenericIntent": "{Alright|Okay}! Your pizza looks great!",
+        "noGenericIntent": "{Alright|Okay}! Your pizza looks great! You add ingredientList",
         "helpGenericIntent": "$t(mainState.getIngredientsIntent)"
     }
 }

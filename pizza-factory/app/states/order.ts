@@ -12,26 +12,11 @@ import { ApplicationState } from "./application";
  */
 
 @injectable()
-export class PizzaState extends ApplicationState {
+export class OrderState extends ApplicationState {
   constructor(
     @inject(injectionNames.current.stateSetupSet) stateSetupSet: MergedSetupSet,
     @inject(injectionNames.current.entityDictionary) public entities: EntityDictionary
   ) {
     super(stateSetupSet);
-  }
-
-  @needs("ingredient")
-  public async addIngredientToPizzaIntent(machine: Transitionable): Promise<void> {
-    const addedIngredient = this.entities.get("ingredient") as string;
-    this.prompt(this.t({ ingredient: addedIngredient }));
-  }
-
-  public yesGenericIntent() {
-    this.prompt(this.t());
-  }
-
-  public noGenericIntent(machine: Transitionable) {
-    this.prompt(this.t());
-    return machine.transitionTo("OrderState");
   }
 }

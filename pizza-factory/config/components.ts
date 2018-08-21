@@ -36,7 +36,7 @@ const configuration: AssistantJSConfiguration & AlexaConfigurationAttribute & Ap
     useVerifier: false,
     invocationName: "pizza factory",
     entities: {
-      ASSISTANT_FOOD: "AMAZON.Food",
+      ASSISTANT_FOOD: "FOOD",
     },
   },
 
