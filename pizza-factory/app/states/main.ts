@@ -1,8 +1,8 @@
 import { injectionNames, Transitionable } from "assistant-source";
 import { inject, injectable } from "inversify";
 
-import { ApplicationState } from "./application";
 import { MergedSetupSet } from "../../config/handler";
+import { ApplicationState } from "./application";
 
 /**
  * This is your MainState.
@@ -17,18 +17,19 @@ export class MainState extends ApplicationState {
   }
 
   /**
-   * The invokeGenericIntent method (GenericIntent.invoke) is your "main entrance" into your application. 
+   * The invokeGenericIntent method (GenericIntent.invoke) is your "main entrance" into your application.
    * It is called as soon as the application is launched, e. g. if user says "launch xxxxx".
    */
   public invokeGenericIntent(machine: Transitionable) {
     this.prompt(this.t());
   }
 
-  public async getIngredientsIntent() {
-    this.endSessionWith(this.t());
+  public getIngredientsIntent() {
+    this.prompt(this.t());
   }
 
-  public async addIngredientsToPizzaIntent() {
-    this.endSessionWith(this.t());
+  public async createPizzaIntent(machine: Transitionable): Promise<void> {
+    this.prompt(this.t());
+    return machine.transitionTo("PizzaState");
   }
 }

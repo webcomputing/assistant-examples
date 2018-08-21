@@ -1,6 +1,6 @@
-import { AssistantJSConfiguration } from "assistant-source";
 import { AlexaConfigurationAttribute } from "assistant-alexa";
 import { ApiaiConfigurationAttribute } from "assistant-apiai";
+import { AssistantJSConfiguration } from "assistant-source";
 /*
  * In AssistantJS, every component may have it's own configuration settings. For example,
  * the interface "I18nConfiguration" describes the configuration of AssistantJS's internal
@@ -13,22 +13,20 @@ import { ApiaiConfigurationAttribute } from "assistant-apiai";
  * > import { AlexaConfigurationAttribute } from "assistant-alexa";
  * > const configuration: AssistantJSConfiguration & AlexaConfigurationAttribute = ...
  */
-const configuration: AssistantJSConfiguration &
-  AlexaConfigurationAttribute &
-  ApiaiConfigurationAttribute = {
+const configuration: AssistantJSConfiguration & AlexaConfigurationAttribute & ApiaiConfigurationAttribute = {
   /** Configuration of AssistantJS's i18n component (interface = I18nConfiguration) */
   "core:i18n": {
     // This is basically the i18next configuration. Check out https://www.i18next.com/ for more information!
     i18nextAdditionalConfiguration: {
       // This entry is needed and tells i18next where to find your language files.
       backend: {
-        loadPath: process.cwd() + "/config/locales/{{lng}}/{{ns}}.json"
+        loadPath: process.cwd() + "/config/locales/{{lng}}/{{ns}}.json",
       },
       lngs: ["en"],
       fallbackLng: "en",
       // If you encouter problems with i18next, change this to true
-      debug: false
-    }
+      debug: false,
+    },
   },
 
   // There are also other settings available. Just have a look at the "AssistantJSConfiguration" interface.
@@ -38,24 +36,24 @@ const configuration: AssistantJSConfiguration &
     useVerifier: false,
     invocationName: "pizza factory",
     entities: {
-      ASSISTANT_FOOD: "AMAZON.Food"
-    }
+      ASSISTANT_FOOD: "AMAZON.Food",
+    },
   },
 
   apiai: {
     route: "/apiai",
     entities: {
-      ASSISTANT_FOOD: "@sys.any"
+      ASSISTANT_FOOD: "@sys.any",
     },
     authenticationHeaders: {
       myFirstSecretHeader: "myVerySecretValue",
-      mySecondSecretHeader: "mySecondVerySecretValue"
-    }
+      mySecondSecretHeader: "mySecondVerySecretValue",
+    },
   },
 
   "core:unifier": {
     entities: {
-      ASSISTANT_FOOD: ["ingredients"],
+      ASSISTANT_FOOD: ["ingredient"],
     },
     /* entitySets: {
       ingredients: {
@@ -74,7 +72,7 @@ const configuration: AssistantJSConfiguration &
         }
       }
     } */
-  }
+  },
 };
 
 // The linking between your configuration and your application is done in your index.ts
