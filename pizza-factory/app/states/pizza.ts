@@ -1,4 +1,4 @@
-import { EntityDictionary, injectionNames, Transitionable } from "assistant-source";
+import { CurrentSessionFactory, EntityDictionary, injectionNames, Transitionable } from "assistant-source";
 import { needs } from "assistant-validations";
 import { inject, injectable } from "inversify";
 
@@ -15,14 +15,17 @@ import { ApplicationState } from "./application";
 export class PizzaState extends ApplicationState {
   constructor(
     @inject(injectionNames.current.stateSetupSet) stateSetupSet: MergedSetupSet,
-    @inject(injectionNames.current.entityDictionary) public entities: EntityDictionary
+    @inject(injectionNames.current.entityDictionary) public entities: EntityDictionary,
+    @inject(injectionNames.current.sessionFactory) public sessionFactory: CurrentSessionFactory
   ) {
     super(stateSetupSet);
   }
 
   @needs("ingredient")
   public async addIngredientToPizzaIntent(machine: Transitionable): Promise<void> {
-    const addedIngredient = this.entities.get("ingredient") as string;
+    const addedIngredient = this.entities.getClosest("ingredient", ["salami", "tuna", "gouda", "onions", "tomatoes", "spinach"]) as string;
+
+    await this.sessionFactory().set("ingredientList", addedIngredient);
     this.prompt(this.t({ ingredient: addedIngredient }));
   }
 
@@ -30,8 +33,10 @@ export class PizzaState extends ApplicationState {
     this.prompt(this.t());
   }
 
-  public noGenericIntent(machine: Transitionable) {
-    this.prompt(this.t());
+  public async noGenericIntent(machine: Transitionable) {
+    const ingredientList = (await this.sessionFactory().get("ingredientList")) || "";
+
+    this.prompt(this.t({ ingredient: ingredientList }));
     return machine.transitionTo("OrderState");
   }
 }

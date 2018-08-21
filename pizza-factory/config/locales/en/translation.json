@@ -9,7 +9,7 @@
             "google": "Welcome, Google user to my pizza factory!"            
         },
         "getIngredientsIntent": [
-            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} You can add salami, tuna, cheese, onions, tomatoes or spinach to your pizza!"
+            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} You can add salami, tuna, gouda, onions, tomatoes or spinach to your pizza!"
         ],
         "createPizzaIntent": [
             "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} Which ingredients do you want to add?"
@@ -18,10 +18,10 @@
     },
     "pizzaState": {
         "addIngredientToPizzaIntent": [
-            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} I add {{ingredient}} to you pizza! Do you want to add another ingredient to your pizza?"
+            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} I add {{ingredient}} to your pizza! Do you want to add another ingredient to your pizza?"
         ],
         "yesGenericIntent": "{Alright|Okay}! Lets add another ingredient to your pizza!",
-        "noGenericIntent": "{Alright|Okay}! Your pizza looks great! You add ingredientList",
+        "noGenericIntent": "{Alright|Okay}! Your pizza looks great! You have added {{ingredient}} to your pizza",
         "helpGenericIntent": "$t(mainState.getIngredientsIntent)"
     }
 }
