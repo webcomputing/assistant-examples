@@ -1,11 +1,11 @@
 {
-    "getIngredientsIntent": [
-        "{I want to get|What are|Give me} {all|the} ingredients"
+    "getToppingsIntent": [
+        "{I want to get|What are|Give me} {all|the} toppings"
     ],
     "orderPizzaIntent": [
         "{I want to|} order {my|a} pizza"
     ],
-    "addIngredientToPizzaIntent": [
-        "{I want to|Please|} add {{ingredient}} {to my pizza|to the pizza|}"
+    "addToppingToPizzaIntent": [
+        "{I want to|Please|} add {{topping}} {to my pizza|to the pizza|}"
     ]
 }

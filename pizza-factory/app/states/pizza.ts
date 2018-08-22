@@ -21,19 +21,19 @@ export class PizzaState extends ApplicationState {
     super(stateSetupSet);
   }
 
-  @needs("ingredient")
-  public async addIngredientToPizzaIntent(machine: Transitionable): Promise<void> {
-    const addedIngredient = this.entities.getClosest("ingredient", ["salami", "tuna", "gouda", "onions", "tomatoes", "spinach"]) as string;
+  @needs("topping")
+  public async addToppingToPizzaIntent(machine: Transitionable): Promise<void> {
+    const addedTopping = this.entities.getClosest("topping", ["salami", "tuna", "gouda", "onions", "tomatoes", "spinach"]) as string;
 
-    if ((await this.sessionFactory().get("ingredientArray")) !== undefined) {
-      const tempIngredientArray = JSON.parse((await this.sessionFactory().get("ingredientArray")) || "");
-      tempIngredientArray.push(addedIngredient);
-      await this.sessionFactory().set("ingredientArray", JSON.stringify(tempIngredientArray));
+    if ((await this.sessionFactory().get("toppingArray")) !== undefined) {
+      const tempToppingArray = JSON.parse((await this.sessionFactory().get("toppingArray")) || "");
+      tempToppingArray.push(addedTopping);
+      await this.sessionFactory().set("toppingArray", JSON.stringify(tempToppingArray));
     } else {
-      await this.sessionFactory().set("ingredientArray", JSON.stringify([addedIngredient]));
+      await this.sessionFactory().set("toppingArray", JSON.stringify([addedTopping]));
     }
 
-    this.prompt(this.t({ ingredient: addedIngredient }));
+    this.prompt(this.t({ topping: addedTopping }));
   }
 
   public yesGenericIntent() {
@@ -41,22 +41,23 @@ export class PizzaState extends ApplicationState {
   }
 
   public async noGenericIntent(machine: Transitionable) {
-    const ingredientArray = JSON.parse((await this.sessionFactory().get("ingredientArray")) || "");
-    let ingredientList: string = "";
+    const toppingArray = JSON.parse((await this.sessionFactory().get("toppingArray")) || "");
+    let toppingList: string = "";
     let counter: number = 1;
 
-    for (const ingredient of ingredientArray) {
-      if (counter < ingredientArray.length) {
-        ingredientList += ingredient + ", ";
+    for (const topping of toppingArray) {
+      if (toppingArray.length === 1) {
+        toppingList += topping;
+      } else if (counter < toppingArray.length) {
+        toppingList += topping + ", ";
         counter++;
       } else {
-        ingredientList += "and " + ingredient;
+        toppingList = toppingList.substring(0, toppingList.length - 2);
+        toppingList += " and " + topping;
       }
     }
 
-    // TBD Kommentare ergänzen
-
-    this.prompt(this.t({ ingredient: ingredientList }));
+    this.prompt(this.t({ topping: toppingList }));
     return machine.transitionTo("OrderState");
   }
 }

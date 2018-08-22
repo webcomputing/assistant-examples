@@ -19,4 +19,12 @@ export class OrderState extends ApplicationState {
   ) {
     super(stateSetupSet);
   }
+
+  public yesGenericIntent() {
+    this.prompt(this.t());
+  }
+
+  public async noGenericIntent(machine: Transitionable) {
+    this.prompt(this.t());
+  }
 }

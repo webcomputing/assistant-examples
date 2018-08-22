@@ -8,20 +8,20 @@
             "alexa": "Welcome, Alexa user to my pizza factory!",
             "google": "Welcome, Google user to my pizza factory!"            
         },
-        "getIngredientsIntent": [
+        "getToppingsIntent": [
             "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} You can add salami, tuna, gouda, onions, tomatoes or spinach to your pizza!"
         ],
         "orderPizzaIntent": [
-            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} Which ingredients do you want to add?"
+            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} Which toppings do you want to add?"
         ],
-        "helpGenericIntent": "You can order your pizza or get a list of ingredients!"
+        "helpGenericIntent": "You can order your pizza or get a list of available toppings!"
     },
     "pizzaState": {
-        "addIngredientToPizzaIntent": [
-            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} I add {{ingredient}} to your pizza! Do you want to add another ingredient to your pizza?"
+        "addToppingToPizzaIntent": [
+            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} I will add {{topping}} to your pizza! Would you like to add another topping to your pizza?"
         ],
-        "yesGenericIntent": "{Alright|Okay}! Lets add another ingredient to your pizza!",
-        "noGenericIntent": "{Alright|Okay}! Your pizza looks great! You have added {{ingredient}} to your pizza",
-        "helpGenericIntent": "$t(mainState.getIngredientsIntent)"
+        "yesGenericIntent": "{Alright|Okay}! Let's add another topping to your pizza!",
+        "noGenericIntent": "{Alright|Okay}! Your pizza looks great! You have added {{topping}} to your pizza! Do you want to order another pizza?",
+        "helpGenericIntent": "$t(mainState.getToppingsIntent)"
     }
 }

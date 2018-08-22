@@ -53,10 +53,10 @@ const configuration: AssistantJSConfiguration & AlexaConfigurationAttribute & Ap
 
   "core:unifier": {
     entities: {
-      ASSISTANT_FOOD: ["ingredient"],
+      ASSISTANT_FOOD: ["topping"],
     },
     /* entitySets: {
-      ingredients: {
+      toppings: {
         mapsTo: "LITERAL",
         values: {
           en: [

@@ -24,7 +24,7 @@ export class MainState extends ApplicationState {
     this.prompt(this.t());
   }
 
-  public getIngredientsIntent() {
+  public getToppingsIntent() {
     this.prompt(this.t());
   }
 
