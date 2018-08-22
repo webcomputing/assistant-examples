@@ -11,10 +11,10 @@
         "getIngredientsIntent": [
             "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} You can add salami, tuna, gouda, onions, tomatoes or spinach to your pizza!"
         ],
-        "createPizzaIntent": [
+        "orderPizzaIntent": [
             "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} Which ingredients do you want to add?"
         ],
-        "helpGenericIntent": "You can create your pizza or get a list of ingredients!"
+        "helpGenericIntent": "You can order your pizza or get a list of ingredients!"
     },
     "pizzaState": {
         "addIngredientToPizzaIntent": [

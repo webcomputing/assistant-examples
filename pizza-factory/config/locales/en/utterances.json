@@ -2,8 +2,8 @@
     "getIngredientsIntent": [
         "{I want to get|What are|Give me} {all|the} ingredients"
     ],
-    "createPizzaIntent": [
-        "{I want to|} create {my|a} pizza"
+    "orderPizzaIntent": [
+        "{I want to|} order {my|a} pizza"
     ],
     "addIngredientToPizzaIntent": [
         "{I want to|Please|} add {{ingredient}} {to my pizza|to the pizza|}"

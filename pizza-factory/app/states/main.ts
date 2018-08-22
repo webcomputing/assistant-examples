@@ -28,7 +28,7 @@ export class MainState extends ApplicationState {
     this.prompt(this.t());
   }
 
-  public async createPizzaIntent(machine: Transitionable): Promise<void> {
+  public async orderPizzaIntent(machine: Transitionable): Promise<void> {
     this.prompt(this.t());
     return machine.transitionTo("PizzaState");
   }

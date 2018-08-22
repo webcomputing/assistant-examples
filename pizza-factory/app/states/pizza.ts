@@ -25,7 +25,14 @@ export class PizzaState extends ApplicationState {
   public async addIngredientToPizzaIntent(machine: Transitionable): Promise<void> {
     const addedIngredient = this.entities.getClosest("ingredient", ["salami", "tuna", "gouda", "onions", "tomatoes", "spinach"]) as string;
 
-    await this.sessionFactory().set("ingredientList", addedIngredient);
+    if ((await this.sessionFactory().get("ingredientArray")) !== undefined) {
+      const tempIngredientArray = JSON.parse((await this.sessionFactory().get("ingredientArray")) || "");
+      tempIngredientArray.push(addedIngredient);
+      await this.sessionFactory().set("ingredientArray", JSON.stringify(tempIngredientArray));
+    } else {
+      await this.sessionFactory().set("ingredientArray", JSON.stringify([addedIngredient]));
+    }
+
     this.prompt(this.t({ ingredient: addedIngredient }));
   }
 
@@ -34,7 +41,20 @@ export class PizzaState extends ApplicationState {
   }
 
   public async noGenericIntent(machine: Transitionable) {
-    const ingredientList = (await this.sessionFactory().get("ingredientList")) || "";
+    const ingredientArray = JSON.parse((await this.sessionFactory().get("ingredientArray")) || "");
+    let ingredientList: string = "";
+    let counter: number = 1;
+
+    for (const ingredient of ingredientArray) {
+      if (counter < ingredientArray.length) {
+        ingredientList += ingredient + ", ";
+        counter++;
+      } else {
+        ingredientList += "and " + ingredient;
+      }
+    }
+
+    // TBD Kommentare ergänzen
 
     this.prompt(this.t({ ingredient: ingredientList }));
     return machine.transitionTo("OrderState");
