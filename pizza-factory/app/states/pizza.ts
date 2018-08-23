@@ -36,17 +36,44 @@ export class PizzaState extends ApplicationState {
     this.prompt(this.t({ topping: addedTopping }));
   }
 
+  public async getCurrentToppingsIntent() {
+    const toppingList = await this.getToppingList();
+
+    if (toppingList === "") {
+      this.prompt("I'm sorry, you have not selected any toppings yet!");
+    } else {
+      this.prompt(this.t({ topping: toppingList }));
+    }
+  }
+
   public yesGenericIntent() {
     this.prompt(this.t());
   }
 
   public async noGenericIntent(machine: Transitionable) {
-    const toppingArray = JSON.parse((await this.sessionFactory().get("toppingArray")) || "");
+    const toppingList = await this.getToppingList();
+
+    this.prompt(this.t({ topping: toppingList }));
+    return machine.transitionTo("OrderState");
+  }
+
+  private async getToppingList() {
+    let toppingArray = "";
+    const sessionToppingArray = await this.sessionFactory().get("toppingArray");
+
+    if (sessionToppingArray !== undefined) {
+      toppingArray = JSON.parse(sessionToppingArray);
+    } else {
+      toppingArray = "";
+    }
+
     let toppingList: string = "";
     let counter: number = 1;
 
     for (const topping of toppingArray) {
-      if (toppingArray.length === 1) {
+      if (toppingArray === undefined) {
+        toppingList = "";
+      } else if (toppingArray.length === 1) {
         toppingList += topping;
       } else if (counter < toppingArray.length) {
         toppingList += topping + ", ";
@@ -57,7 +84,6 @@ export class PizzaState extends ApplicationState {
       }
     }
 
-    this.prompt(this.t({ topping: toppingList }));
-    return machine.transitionTo("OrderState");
+    return toppingList;
   }
 }

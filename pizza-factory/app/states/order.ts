@@ -20,11 +20,12 @@ export class OrderState extends ApplicationState {
     super(stateSetupSet);
   }
 
-  public yesGenericIntent() {
+  public async yesGenericIntent(machine: Transitionable) {
     this.prompt(this.t());
+    return machine.transitionTo("PizzaState");
   }
 
-  public async noGenericIntent(machine: Transitionable) {
-    this.prompt(this.t());
+  public noGenericIntent() {
+    this.endSessionWith(this.t());
   }
 }

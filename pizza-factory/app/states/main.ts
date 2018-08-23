@@ -14,6 +14,11 @@ import { ApplicationState } from "./application";
 export class MainState extends ApplicationState {
   constructor(@inject(injectionNames.current.stateSetupSet) stateSetupSet: MergedSetupSet) {
     super(stateSetupSet);
+
+    // TBD: Kommentare ergänzen
+    // TBD: Tests schreiben
+    // TBD: Whats on my pizza so far?
+    // TBD: mehrere Pizzen
   }
 
   /**
