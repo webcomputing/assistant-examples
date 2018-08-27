@@ -24,20 +24,26 @@ export class PizzaState extends ApplicationState {
   @needs("topping")
   public async addToppingToPizzaIntent(machine: Transitionable): Promise<void> {
     const addedTopping = this.entities.getClosest("topping", ["salami", "tuna", "gouda", "onions", "tomatoes", "spinach"]) as string;
+    const amountOfPizzas: string = (await this.sessionFactory().get("amountOfPizzas")) || "";
+    const key: string = "pizza" + amountOfPizzas;
 
-    if ((await this.sessionFactory().get("toppingArray")) !== undefined) {
-      const tempToppingArray = JSON.parse((await this.sessionFactory().get("toppingArray")) || "");
+    if ((await this.sessionFactory().get(key)) !== undefined) {
+      const tempToppingArray = JSON.parse((await this.sessionFactory().get(key)) || "");
       tempToppingArray.push(addedTopping);
-      await this.sessionFactory().set("toppingArray", JSON.stringify(tempToppingArray));
+      await this.sessionFactory().set(key, JSON.stringify(tempToppingArray));
     } else {
-      await this.sessionFactory().set("toppingArray", JSON.stringify([addedTopping]));
+      await this.sessionFactory().set(key, JSON.stringify([addedTopping]));
     }
 
     this.prompt(this.t({ topping: addedTopping }));
   }
 
   public async getCurrentToppingsIntent() {
-    const toppingList = await this.getToppingList();
+    const amountOfPizzas: string = (await this.sessionFactory().get("amountOfPizzas")) || "";
+    const key: string = "pizza" + amountOfPizzas;
+    const sessionToppingArray = await this.sessionFactory().get(key);
+
+    const toppingList = await this.getToppingList(sessionToppingArray);
 
     if (toppingList === "") {
       this.prompt("I'm sorry, you have not selected any toppings yet!");
@@ -51,39 +57,13 @@ export class PizzaState extends ApplicationState {
   }
 
   public async noGenericIntent(machine: Transitionable) {
-    const toppingList = await this.getToppingList();
+    const amountOfPizzas: string = (await this.sessionFactory().get("amountOfPizzas")) || "";
+    const key: string = "pizza" + amountOfPizzas;
+    const sessionToppingArray = await this.sessionFactory().get(key);
+
+    const toppingList = await this.getToppingList(sessionToppingArray);
 
     this.prompt(this.t({ topping: toppingList }));
     return machine.transitionTo("OrderState");
-  }
-
-  private async getToppingList() {
-    let toppingArray = "";
-    const sessionToppingArray = await this.sessionFactory().get("toppingArray");
-
-    if (sessionToppingArray !== undefined) {
-      toppingArray = JSON.parse(sessionToppingArray);
-    } else {
-      toppingArray = "";
-    }
-
-    let toppingList: string = "";
-    let counter: number = 1;
-
-    for (const topping of toppingArray) {
-      if (toppingArray === undefined) {
-        toppingList = "";
-      } else if (toppingArray.length === 1) {
-        toppingList += topping;
-      } else if (counter < toppingArray.length) {
-        toppingList += topping + ", ";
-        counter++;
-      } else {
-        toppingList = toppingList.substring(0, toppingList.length - 2);
-        toppingList += " and " + topping;
-      }
-    }
-
-    return toppingList;
   }
 }

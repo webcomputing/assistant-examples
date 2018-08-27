@@ -21,4 +21,33 @@ export class ApplicationState extends BaseState<MergedAnswerTypes, MergedHandler
   public cancelGenericIntent() {
     this.endSessionWith(this.t());
   }
+
+  public async getToppingList(sessionToppingArray) {
+    let toppingArray = "";
+
+    if (sessionToppingArray !== undefined) {
+      toppingArray = JSON.parse(sessionToppingArray);
+    } else {
+      toppingArray = "";
+    }
+
+    let toppingList: string = "";
+    let counter: number = 1;
+
+    for (const topping of toppingArray) {
+      if (toppingArray === undefined) {
+        toppingList = "";
+      } else if (toppingArray.length === 1) {
+        toppingList += topping;
+      } else if (counter < toppingArray.length) {
+        toppingList += topping + ", ";
+        counter++;
+      } else {
+        toppingList = toppingList.substring(0, toppingList.length - 2);
+        toppingList += " and " + topping;
+      }
+    }
+
+    return toppingList;
+  }
 }

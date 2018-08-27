@@ -1,4 +1,4 @@
-import { injectionNames, Transitionable } from "assistant-source";
+import { CurrentSessionFactory, injectionNames, Transitionable } from "assistant-source";
 import { inject, injectable } from "inversify";
 
 import { MergedSetupSet } from "../../config/handler";
@@ -12,20 +12,21 @@ import { ApplicationState } from "./application";
 
 @injectable()
 export class MainState extends ApplicationState {
-  constructor(@inject(injectionNames.current.stateSetupSet) stateSetupSet: MergedSetupSet) {
+  constructor(
+    @inject(injectionNames.current.stateSetupSet) stateSetupSet: MergedSetupSet,
+    @inject(injectionNames.current.sessionFactory) public sessionFactory: CurrentSessionFactory
+  ) {
     super(stateSetupSet);
-
     // TBD: Kommentare ergänzen
     // TBD: Tests schreiben
-    // TBD: Whats on my pizza so far?
-    // TBD: mehrere Pizzen
   }
 
   /**
    * The invokeGenericIntent method (GenericIntent.invoke) is your "main entrance" into your application.
    * It is called as soon as the application is launched, e. g. if user says "launch xxxxx".
    */
-  public invokeGenericIntent(machine: Transitionable) {
+  public async invokeGenericIntent(machine: Transitionable) {
+    await this.sessionFactory().set("amountOfPizzas", "1");
     this.prompt(this.t());
   }
 
