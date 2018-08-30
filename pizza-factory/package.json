@@ -4,7 +4,7 @@
   "description": "AssistantJS implementation of pizza-factory",
   "main": "js/index.js",
   "scripts": {
-    "test": "jasmine-ts spec/**/*.spec.ts"
+    "test": "tsc && jasmine-ts spec/**/*.spec.ts"
   },
   "dependencies": {
     "assistant-apiai": "internal",
