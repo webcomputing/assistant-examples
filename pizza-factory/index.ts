@@ -29,11 +29,11 @@ export function initializeSetups(
   addOnly = false
 ) {
   // Register all additional AssistantJS components - currently none
-  assistantJs.registerComponent(alexaDescriptor);
-  assistantJs.registerComponent(validationsDescriptor);
-  assistantJs.registerComponent(apiAiDescriptor);
-  assistantJs.registerComponent(genericUtterancesDescriptor);
-  assistantJs.registerComponent(googleAssistantDescriptor);
+  localAssistantJs.registerComponent(alexaDescriptor);
+  localAssistantJs.registerComponent(validationsDescriptor);
+  localAssistantJs.registerComponent(apiAiDescriptor);
+  localAssistantJs.registerComponent(genericUtterancesDescriptor);
+  localAssistantJs.registerComponent(googleAssistantDescriptor);
 
   // Configure components
   localAssistantJs.addConfiguration(componentConfiguration);

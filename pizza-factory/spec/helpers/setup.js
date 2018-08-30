@@ -1,7 +1,6 @@
 require("reflect-metadata");
 let initializeSetups = require("../../index").initializeSetups;
 let AssistantSource = require("assistant-source");
-let AssistantAuthentication = require("assistant-authentication");
 let Alexa = require("assistant-alexa");
 let GoogleAssistant = require("assistant-google");
 
@@ -12,11 +11,7 @@ beforeEach(function() {
   this.container = this.assistantJs.container;
 
   // Initialize states, strategies, configuration, ... the same way index.ts does
-  initializeSetups(
-    this.assistantJs,
-    new AssistantSource.StateMachineSetup(this.assistantJs),
-    new AssistantAuthentication.AuthenticationSetup(this.assistantJs)
-  );
+  initializeSetups(this.assistantJs, new AssistantSource.StateMachineSetup(this.assistantJs), new AssistantSource.FilterSetup(this.assistantJs));
 
   // Initialize platform specific spec helpers; remember that all of them fulfill the AssistantSource.unifierInterfaces.PlatformSpecHelper interface!
   this.platforms = {
