@@ -1,4 +1,4 @@
-import { BasicAnswerTypes, GenericIntent, Session } from "assistant-source";
+import { BasicAnswerTypes, GenericIntent, injectionNames, Session } from "assistant-source";
 import { ThisContext } from "../../support/this-context";
 
 interface CurrentThisContext extends ThisContext {
@@ -7,6 +7,7 @@ interface CurrentThisContext extends ThisContext {
 }
 
 describe("MainState", function() {
+  let currentSessionFactory: () => Session;
   let responseResult: Partial<BasicAnswerTypes>;
 
   describe("on platform = alexa", function() {
@@ -16,6 +17,20 @@ describe("MainState", function() {
         await this.platforms.alexa.specSetup.runMachine("MainState");
         return this.platforms.alexa.specSetup.getResponseResults();
       };
+    });
+
+    describe("invokeGenericIntent", function() {
+      it("stores amount of pizzas into session", async function(this: CurrentThisContext) {
+        currentSessionFactory = this.container.inversifyInstance.get(injectionNames.current.sessionFactory);
+        const amountOfPizzas = (await currentSessionFactory().get("amountOfPizzas")) || 0;
+        expect(+amountOfPizzas).toBe(1);
+        expect(+amountOfPizzas).not.toBe(1);
+      });
+
+      it("greets and prompts for command", async function(this: CurrentThisContext) {
+        responseResult = await this.callIntent(GenericIntent.Invoke);
+        expect(await this.translateValuesFor()("mainState.invokeGenericIntent")).toContain(responseResult.voiceMessage!.text);
+      });
     });
 
     describe("helpGenericIntent", function() {
