@@ -1,10 +1,8 @@
 import { CurrentSessionFactory, EntityDictionary, injectionNames, Transitionable } from "assistant-source";
-import { needs } from "assistant-validations";
 import { inject, injectable } from "inversify";
 
 import { MergedSetupSet } from "../../config/handler";
 import { ApplicationState } from "./application";
-import { PizzaState } from "./pizza";
 
 /**
  * This is your MainState.

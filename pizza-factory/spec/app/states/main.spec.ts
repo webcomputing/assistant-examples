@@ -2,9 +2,10 @@ import { BasicAnswerTypes, GenericIntent, injectionNames, Session } from "assist
 import { ThisContext } from "../../support/this-context";
 
 interface CurrentThisContext extends ThisContext {
+  currentSessionFactory: () => Session;
+  currentStateNameProvider: () => Promise<string>;
   /** Simulate an intent call and returns the response results */
   callIntent(intent: GenericIntent | string): Promise<Partial<BasicAnswerTypes>>;
-  currentSessionFactory:() => Session;
 }
 
 describe("MainState", function() {
@@ -16,21 +17,46 @@ describe("MainState", function() {
         await this.platforms.alexa.pretendIntentCalled(intent, false);
         await this.platforms.alexa.specSetup.runMachine("MainState");
         this.currentSessionFactory = this.container.inversifyInstance.get(injectionNames.current.sessionFactory);
+        this.currentStateNameProvider = this.container.inversifyInstance.get(injectionNames.current.stateNameProvider);
         return this.platforms.alexa.specSetup.getResponseResults();
       };
     });
 
     describe("invokeGenericIntent", function() {
-      it("stores amount of pizzas into session", async function(this: CurrentThisContext) {
+      beforeEach(async function(this: CurrentThisContext) {
         responseResult = await this.callIntent(GenericIntent.Invoke);
+      });
+
+      it("stores amount of pizzas into session", async function(this: CurrentThisContext) {
         const amountOfPizzas = (await this.currentSessionFactory().get("amountOfPizzas")) || 0;
         expect(+amountOfPizzas).toBe(1);
         expect(+amountOfPizzas).not.toBe(0);
       });
 
       it("greets and prompts for command", async function(this: CurrentThisContext) {
-        responseResult = await this.callIntent(GenericIntent.Invoke);
         expect(await this.translateValuesFor()("mainState.invokeGenericIntent.alexa")).toContain(responseResult.voiceMessage!.text);
+      });
+    });
+
+    describe("getToppingsIntent", function() {
+      it("lists all available toppings", async function(this: CurrentThisContext) {
+        responseResult = await this.callIntent("getToppings");
+        expect(await this.translateValuesFor()("mainState.getToppingsIntent")).toContain(responseResult.voiceMessage!.text);
+      });
+    });
+
+    describe("orderPizzaIntent", function() {
+      beforeEach(async function(this: CurrentThisContext) {
+        responseResult = await this.callIntent("orderPizza");
+      });
+
+      it("order pizza", async function(this: CurrentThisContext) {
+        expect(await this.translateValuesFor()("mainState.orderPizzaIntent")).toContain(responseResult.voiceMessage!.text);
+      });
+
+      it("sets the current conversation state to 'PizzaState'", async function(this: CurrentThisContext) {
+        const currentStateName = await this.currentStateNameProvider();
+        expect(currentStateName).toEqual("PizzaState");
       });
     });
 
