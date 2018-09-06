@@ -55,23 +55,6 @@ const configuration: AssistantJSConfiguration & AlexaConfigurationAttribute & Ap
     entities: {
       ASSISTANT_FOOD: ["topping"],
     },
-    /* entitySets: {
-      toppings: {
-        mapsTo: "LITERAL",
-        values: {
-          en: [
-            {
-              value: "cheese",
-              synonyms: ["gouda"]
-            },
-            {
-              value: "salami",
-              synonyms: [""]
-            }
-          ]
-        }
-      }
-    } */
   },
 };
 

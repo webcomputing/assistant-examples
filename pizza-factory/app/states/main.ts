@@ -18,8 +18,9 @@ export class MainState extends ApplicationState {
   ) {
     super(stateSetupSet);
     // TBD: Readme schreiben
-    // TBD: Tests schreiben
     // TBD: Session Strategien
+
+    // TBD: Tests schreiben
   }
 
   /**
