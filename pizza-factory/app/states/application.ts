@@ -22,15 +22,12 @@ export class ApplicationState extends BaseState<MergedAnswerTypes, MergedHandler
     this.endSessionWith(this.t());
   }
 
+  /**
+   * Create a readable string with all toppingss
+   * @param sessionToppingArray
+   */
   public async getToppingList(sessionToppingArray) {
-    let toppingArray = "";
-
-    if (sessionToppingArray !== undefined) {
-      toppingArray = JSON.parse(sessionToppingArray);
-    } else {
-      toppingArray = "";
-    }
-
+    const toppingArray = sessionToppingArray !== undefined ? JSON.parse(sessionToppingArray) : "";
     let toppingList: string = "";
     let counter: number = 1;
 
