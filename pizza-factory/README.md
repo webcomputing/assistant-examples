@@ -7,7 +7,12 @@ This repository initializes an example "pizza factory" assistantJS application. 
 Make up your own pizza by putting your favourite ingredients on it ("Add tuna to my pizza!") and ask for all mentioned ingredients ("Whats on my pizza so far?") whenever you like. This example teaches you how to deal with [AssistantJS's session management][1] and introduces you into AssistantJS's implementation of the [Levenshtein distance][2].
 
 ## AssistantJS's session management
+As already mentioned, this little "pizza factory" teaches you how to deal with the session manangement of AssistantJS. AssistantJS offers some great possibilities. Which option you want to use can be configured in the `config/components.ts` at `core:services`. Configure your desired session storage by naming the name of the factory to use.
 
+1. No configuration: If you have no configuration done (yeah, it works!) AssistantJS uses the unencrypted platform storage.
+2. Redis/Fakeredis: Redis gives you a redis-based session storage, which is usable for all platforms. For testing you can also use Fakeredis.
+3. Platform: You can decide between an unencrypted platform storage - like no configuration - or a cryptedPlatform, where it crypts data before communicating with the platform service.
+4. Custom: It is also possible to integrate your preferred storage system like mysql etc.
 
 ## Integrated optional assistantJS components
 1. assistant-alexa

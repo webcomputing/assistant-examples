@@ -29,7 +29,7 @@ const configuration: AssistantJSConfiguration & AlexaConfigurationAttribute & Ap
     },
   },
 
-  // There are also other settings available. Just have a look at the "AssistantJSConfiguration" interface.
+  // Alexa Configuration with
   alexa: {
     applicationID: "amzn1.ask.skill.b65ad48a-e27e-4c0e-ba68-f687d18bf769",
     route: "/alexa",
@@ -40,6 +40,7 @@ const configuration: AssistantJSConfiguration & AlexaConfigurationAttribute & Ap
     },
   },
 
+  // Apiai Configuration with authenticationHeader
   apiai: {
     route: "/apiai",
     entities: {
@@ -51,6 +52,7 @@ const configuration: AssistantJSConfiguration & AlexaConfigurationAttribute & Ap
     },
   },
 
+  // Entities
   "core:unifier": {
     entities: {
       ASSISTANT_FOOD: ["topping"],
