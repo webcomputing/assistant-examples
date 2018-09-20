@@ -27,4 +27,10 @@ beforeEach(function() {
 
   // Shorten access to i18next helper
   this.translateValuesFor = () => this.container.inversifyInstance.get(AssistantSource.injectionNames.current.i18nTranslateValuesFor);
+
+  // resolve results from ResponseHandler
+  this.resolveResponseHandlerResults = async () => {
+    await this.responseHandler.resolveResults();
+    this.responseHandlerResults = this.specHelper.getResponseResults();
+  };
 });
