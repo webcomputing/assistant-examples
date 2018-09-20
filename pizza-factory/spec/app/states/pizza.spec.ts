@@ -1,32 +1,71 @@
-import { BasicAnswerTypes, GenericIntent, injectionNames, Session } from "assistant-source";
+import { AlexaSpecificHandable, AlexaSpecificTypes } from "assistant-alexa";
+import { BasicAnswerTypes, BasicHandler, GenericIntent, injectionNames, Session } from "assistant-source";
 import { ThisContext } from "../../support/this-context";
 
 interface CurrentThisContext extends ThisContext {
   currentSessionFactory: () => Session;
   currentStateNameProvider: () => Promise<string>;
+  /**  */
+  prepareTopping: (topping?: string) => Promise<AlexaSpecificHandable<AlexaSpecificTypes>>;
   /** Simulate an intent call and returns the response results */
-  callIntent(intent: GenericIntent | string): Promise<Partial<BasicAnswerTypes>>;
+  callIntent: (intent: GenericIntent | string) => Promise<Partial<BasicAnswerTypes>>;
 }
 
 describe("PizzaState", function() {
+  const myTopping = "salami";
   let responseResult: Partial<BasicAnswerTypes>;
+  let currentSessionFactory: () => Session;
 
   describe("on platform = alexa", function() {
     beforeEach(async function(this: CurrentThisContext) {
-      this.callIntent = async intent => {
-        await this.platforms.alexa.pretendIntentCalled(intent, false);
-        await this.platforms.alexa.specSetup.runMachine("MainState");
-        this.currentSessionFactory = this.container.inversifyInstance.get(injectionNames.current.sessionFactory);
-        this.currentStateNameProvider = this.container.inversifyInstance.get(injectionNames.current.stateNameProvider);
-        return this.platforms.alexa.specSetup.getResponseResults();
-      };
+      await this.prepareCurrentStateForTest("PizzaState", "addToppingToPizzaIntent", { entities: { topping: myTopping } });
+
+      // Store number in session factory
+      /* currentSessionFactory = this.container.inversifyInstance.get(injectionNames.current.sessionFactory);
+      await currentSessionFactory().set("myNumber", "1"); */
+
+      // Mindeste
+      await this.specHelper.runMachine("PizzaState");
+    });
+
+    describe("addToppingToPizzaIntent", function() {
+      beforeEach(async function(this: CurrentThisContext) {
+        console.log("Test");
+      });
+
+      describe("when topping is valid topping", function() {
+        it("adds a topping to the pizza", async function(this: CurrentThisContext) {
+          console.log("Test");
+        });
+      });
+
+      describe("when topping is misspoken", function() {
+        it("adds a topping to the pizza", async function(this: CurrentThisContext) {
+          console.log("Test");
+        });
+      });
+
+      describe("when no topping was passed", function() {
+        it("adds a topping to the pizza", async function(this: CurrentThisContext) {
+          console.log("Test");
+        });
+      });
+
+      describe("check amount of pizzas", function() {
+        it("counts the amount of pizzas for session factory (key)", async function(this: CurrentThisContext) {
+          console.log("Test");
+        });
+      });
+
+      describe("check topping array", function() {
+        it("stores the topping of pizzas for session factory (value)", async function(this: CurrentThisContext) {
+          console.log("Test");
+        });
+      });
     });
 
     describe("getCurrentToppingsIntent", function() {
-      it("offers the user to add another topping to the pizza", async function(this: CurrentThisContext) {
-        responseResult = await this.callIntent(GenericIntent.Yes);
-        expect(await this.translateValuesFor()("pizzaState.yesGenericIntent")).toContain(responseResult.voiceMessage!.text);
-      });
+      it("gets current toppings on pizza", async function(this: CurrentThisContext) {});
     });
 
     describe("yesGenericIntent", function() {

@@ -19,6 +19,9 @@ beforeEach(function() {
     googleAssistant: new GoogleAssistant.GoogleSpecHelper(this.specHelper),
   };
 
+  // Set "current" platform to alexa as default
+  this.platforms.current = this.platforms.alexa;
+
   // Execute bindings
   this.specHelper.prepare();
 

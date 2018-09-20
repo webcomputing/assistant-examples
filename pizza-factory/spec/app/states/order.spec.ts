@@ -59,7 +59,7 @@ describe("OrderState", function() {
       });
     });
 
-    describe("noGenericIntent", function() {
+    /* describe("noGenericIntent", function() {
       beforeEach(async function(this: CurrentThisContext) {
         responseResult = await this.callIntent(GenericIntent.No);
       });
@@ -73,7 +73,7 @@ describe("OrderState", function() {
         expect(responseResult.shouldSessionEnd).toBeTruthy();
         // expect(await this.translateValuesFor()("orderState.noGenericIntent", { pizzas: pizzaList })).toContain(responseResult.voiceMessage!.text);
       });
-    });
+    }); */
 
     describe("helpGenericIntent", function() {
       it("tries to help", async function(this: CurrentThisContext) {
