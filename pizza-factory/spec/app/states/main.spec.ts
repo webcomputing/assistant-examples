@@ -1,4 +1,4 @@
-import { BasicAnswerTypes, CurrentSessionFactory, GenericIntent, injectionNames, Session } from "assistant-source";
+import { GenericIntent, injectionNames, Session } from "assistant-source";
 import { ThisContext } from "../../support/this-context";
 
 interface CurrentThisContext extends ThisContext {
@@ -8,23 +8,13 @@ interface CurrentThisContext extends ThisContext {
 
 describe("MainState", function() {
   describe("on platform = alexa", function() {
-    beforeEach(async function(this: CurrentThisContext) {
-      /* this.callIntent = async intent => {
-        await this.platforms.alexa.pretendIntentCalled(intent, false);
-        await this.platforms.alexa.specSetup.runMachine("MainState");
-        this.currentSessionFactory = this.container.inversifyInstance.get(injectionNames.current.sessionFactory);
-        this.currentStateNameProvider = this.container.inversifyInstance.get(injectionNames.current.stateNameProvider);
-        return this.platforms.alexa.specSetup.getResponseResults();
-      }; */
-    });
-
     describe("invokeGenericIntent", function() {
       beforeEach(async function(this: CurrentThisContext) {
         await this.callIntent(GenericIntent.Invoke);
-        this.currentSessionFactory = this.container.inversifyInstance.get(injectionNames.current.sessionFactory);
       });
 
       it("stores amount of pizzas into session", async function(this: CurrentThisContext) {
+        this.currentSessionFactory = this.container.inversifyInstance.get(injectionNames.current.sessionFactory);
         const amountOfPizzas = (await this.currentSessionFactory().get("amountOfPizzas")) || 0;
         expect(+amountOfPizzas).toBe(1);
         expect(+amountOfPizzas).not.toBe(0);
@@ -45,7 +35,6 @@ describe("MainState", function() {
     describe("orderPizzaIntent", function() {
       beforeEach(async function(this: CurrentThisContext) {
         await this.callIntent("orderPizza");
-        this.currentStateNameProvider = this.container.inversifyInstance.get(injectionNames.current.stateNameProvider);
       });
 
       it("order pizza", async function(this: CurrentThisContext) {
@@ -53,6 +42,7 @@ describe("MainState", function() {
       });
 
       it("sets the current conversation state to 'PizzaState'", async function(this: CurrentThisContext) {
+        this.currentStateNameProvider = this.container.inversifyInstance.get(injectionNames.current.stateNameProvider);
         const currentStateName = await this.currentStateNameProvider();
         expect(currentStateName).toEqual("PizzaState");
       });

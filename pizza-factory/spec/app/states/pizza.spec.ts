@@ -8,17 +8,7 @@ interface CurrentThisContext extends ThisContext {
 }
 
 describe("PizzaState", function() {
-  let currentSessionFactory: () => Session;
-
   describe("on platform = alexa", function() {
-    beforeEach(async function(this: CurrentThisContext) {
-      // Store number in session factory
-      /* currentSessionFactory = this.container.inversifyInstance.get(injectionNames.current.sessionFactory);
-      await currentSessionFactory().set("myNumber", "1"); */
-      // Mindeste
-      // await this.specHelper.runMachine("PizzaState");
-    });
-
     describe("addToppingToPizzaIntent", function() {
       describe("when topping is valid topping", function() {
         it("adds a topping to the pizza", async function(this: CurrentThisContext) {
@@ -44,7 +34,14 @@ describe("PizzaState", function() {
       });
 
       describe("when no topping was passed", function() {
-        it("adds a topping to the pizza", async function(this: CurrentThisContext) {});
+        it("adds a topping to the pizza", async function(this: CurrentThisContext) {
+          const myTopping = "";
+          await this.prepareCurrentStateForTest("PizzaState", "addToppingToPizzaIntent", { entities: { topping: myTopping } });
+          await this.runMachineAndGetResults("PizzaState");
+          expect(await this.translateValuesFor()("pizzaState.addToppingToPizzaIntent", { topping: myTopping })).toContain(
+            await this.responseHandlerResults.voiceMessage!.text
+          );
+        });
       });
 
       describe("check amount of pizzas", function() {

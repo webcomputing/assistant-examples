@@ -30,5 +30,8 @@
     "orderState": {
         "yesGenericIntent": "{Alright|Okay}! Let's add toppings to another pizza! Which toppings do you want to add?",
         "noGenericIntent": "{Alright|Okay}! You order {{pizzas}} will arrive in a few minutes! Enjoy it!"
+    },
+    "promptState": {
+        "topping": "{Which topping do you want to add?|You forgot to tell me the topping!}"
     }
 }
