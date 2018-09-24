@@ -1,87 +1,91 @@
-import { BasicAnswerTypes, GenericIntent, injectionNames, Session } from "assistant-source";
+import { OrderState } from "../../../app/states/order";
 import { ThisContext } from "../../support/this-context";
 
 interface CurrentThisContext extends ThisContext {
-  currentSessionFactory: () => Session;
-  currentStateNameProvider: () => Promise<string>;
+  currentState: OrderState;
 }
 
 describe("OrderState", function() {
-  const pizza1 = ["tuna", "gouda"];
-  const pizza2 = ["salami", "spinach"];
-  const amount = 2;
-  let responseResult: Partial<BasicAnswerTypes>;
+  beforeEach(async function(this: CurrentThisContext) {
+    this.fixMathSeed();
+  });
 
   describe("on platform = alexa", function() {
-    beforeEach(async function(this: CurrentThisContext) {
-      /* this.preparePizzaList = async () => {
-        // Store amount in session factory
-        this.currentSessionFactory = this.container.inversifyInstance.get(injectionNames.current.sessionFactory);
-        // await this.currentSessionFactory().set("amount", pizzaList);
-
-        // Store pizzaList in session factory
-        this.currentSessionFactory = this.container.inversifyInstance.get(injectionNames.current.sessionFactory);
-        // await this.currentSessionFactory().set("myNumber", pizzaList);
-      };
-
-      this.callIntent = async intent => {
-        await this.platforms.alexa.pretendIntentCalled(intent, false);
-        await this.platforms.alexa.specSetup.runMachine("OrderState");
-        this.currentSessionFactory = this.container.inversifyInstance.get(injectionNames.current.sessionFactory);
-        this.currentStateNameProvider = this.container.inversifyInstance.get(injectionNames.current.stateNameProvider);
-        return this.platforms.alexa.specSetup.getResponseResults();
-      }; */
-    });
-
     describe("yesGenericIntent", function() {
-      beforeEach(async function(this: CurrentThisContext) {
-        // await this.callIntent(GenericIntent.Yes);
+      describe("increment amount of pizzas", function() {
+        beforeEach(async function(this: CurrentThisContext) {
+          await this.prepareCurrentStateForTest("OrderState", "yesGenericIntent");
+          this.currentState = this.grabState<OrderState>(await this.getCurrentStateName());
+          await this.currentState.sessionFactory().set("amountOfPizzas", "1");
+          await this.runMachineAndGetResults("OrderState");
+        });
+
+        it("increments the amount of Pizzas", async function(this: CurrentThisContext) {
+          const amountOfPizzas = (await this.currentState.sessionFactory().get("amountOfPizzas")) || 0;
+          const newAmountOfPizzas: number = +amountOfPizzas + 1;
+          expect(+newAmountOfPizzas).toBeGreaterThan(1);
+          expect(newAmountOfPizzas).toBeGreaterThan(+amountOfPizzas);
+        });
       });
 
-      it("invite the user to add toppings to another pizza", async function(this: CurrentThisContext) {
-        /*expect(await this.translateValuesFor()("orderState.yesGenericIntent")).toContain(responseResult.voiceMessage!.text);*/
-      });
+      describe("start new order", function() {
+        beforeEach(async function(this: CurrentThisContext) {
+          await this.prepareCurrentStateForTest("OrderState", "yesGenericIntent");
+          await this.runMachineAndGetResults("OrderState");
+        });
 
-      it("increment the amount of Pizzas", async function(this: CurrentThisContext) {
-        /* const amountOfPizzas = (await this.currentSessionFactory().get("amountOfPizzas")) || 0;
-        const newAmountOfPizzas: number = +amountOfPizzas + 1;
-        expect(+amountOfPizzas).toBeGreaterThan(0);
-        expect(newAmountOfPizzas).toBeGreaterThan(+amountOfPizzas); */
-      });
+        it("invite the user to add toppings to another pizza", async function(this: CurrentThisContext) {
+          expect(await this.responseHandlerResults.voiceMessage!.text).toContain((await this.translateValuesFor()("orderState.yesGenericIntent"))[0]);
+        });
 
-      it("sets the current conversation state to 'PizzaState'", async function(this: CurrentThisContext) {
-        /* const currentStateName = await this.currentStateNameProvider();
-        expect(currentStateName).toEqual("PizzaState"); */
-      });
-    });
-
-    /* describe("noGenericIntent", function() {
-      beforeEach(async function(this: CurrentThisContext) {
-        responseResult = await this.callIntent(GenericIntent.No);
-      });
-
-      it("get the list of pizzas", async function(this: CurrentThisContext) {
-        const amountOfPizzas = (await this.currentSessionFactory().get("amountOfPizzas")) || 0;
-        expect(+amountOfPizzas).toBeGreaterThan(0);
-      });
-
-      it("should end with pizza list", async function(this: CurrentThisContext) {
-        expect(responseResult.shouldSessionEnd).toBeTruthy();
-        // expect(await this.translateValuesFor()("orderState.noGenericIntent", { pizzas: pizzaList })).toContain(responseResult.voiceMessage!.text);
-      });
-    }); */
-
-    describe("helpGenericIntent", function() {
-      it("tries to help", async function(this: CurrentThisContext) {
-        /* await this.callIntent(GenericIntent.Help);
-        expect(await this.translateValuesFor()("root.helpGenericIntent")).toContain(responseResult.voiceMessage!.text); */
+        it("transit to PizzaState", async function() {
+          const state = await this.getCurrentStateName();
+          expect(state).toEqual("PizzaState");
+        });
       });
     });
 
-    describe("cancelGenericIntent", function() {
-      it("says generic goodbye and ends session", async function(this: CurrentThisContext) {
-        /* await this.callIntent(GenericIntent.Cancel);
-        expect(await this.translateValuesFor()("root.cancelGenericIntent")).toContain(responseResult.voiceMessage!.text); */
+    describe("noGenericIntent", function() {
+      describe("order 1 pizza", function() {
+        beforeEach(async function(this: CurrentThisContext) {
+          const myToppings = ["salami", "gouda", "spinach"];
+          await this.prepareCurrentStateForTest("OrderState", "noGenericIntent");
+          await this.currentState.sessionFactory().set("amountOfPizzas", "1");
+          await this.currentState.sessionFactory().set("pizza1", JSON.stringify(myToppings));
+          await this.runMachineAndGetResults("OrderState");
+        });
+
+        it("returns the list of pizzas", async function(this: CurrentThisContext) {
+          expect(await this.responseHandlerResults.voiceMessage!.text).toContain(
+            (await this.translateValuesFor()("orderState.noGenericIntent", { pizzas: "a pizza with salami, gouda and spinach! Your pizza" }))[0]
+          );
+        });
+      });
+
+      describe("order more pizzas", function() {
+        beforeEach(async function(this: CurrentThisContext) {
+          const myToppings1 = ["salami", "gouda", "spinach"];
+          const myToppings2 = ["gouda", "tuna", "tomatoes"];
+          await this.prepareCurrentStateForTest("OrderState", "noGenericIntent");
+          await this.currentState.sessionFactory().set("amountOfPizzas", "2");
+          await this.currentState.sessionFactory().set("pizza1", JSON.stringify(myToppings1));
+          await this.currentState.sessionFactory().set("pizza2", JSON.stringify(myToppings2));
+          await this.runMachineAndGetResults("OrderState");
+        });
+
+        it("returns the list of pizzas", async function(this: CurrentThisContext) {
+          expect(await this.responseHandlerResults.voiceMessage!.text).toContain(
+            (await this.translateValuesFor()("orderState.noGenericIntent", {
+              pizzas: "a pizza with salami, gouda and spinach and a pizza with gouda, tuna and tomatoes! They",
+            }))[0]
+          );
+        });
+      });
+
+      describe("finish", function() {
+        it("should end the pizza factory", async function(this: CurrentThisContext) {
+          expect(this.responseHandlerResults.shouldSessionEnd).toBeTruthy();
+        });
       });
     });
   });
