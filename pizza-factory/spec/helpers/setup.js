@@ -28,6 +28,17 @@ beforeEach(function() {
   // Shorten access to i18next helper
   this.translateValuesFor = () => this.container.inversifyInstance.get(AssistantSource.injectionNames.current.i18nTranslateValuesFor);
 
+  // Grab current state machine
+  this.getCurrentStateMachine = () => this.container.inversifyInstance.get(AssistantSource.injectionNames.current.stateMachine);
+
+  // Grab the current state's name
+  this.getCurrentStateName = () => this.container.inversifyInstance.get(AssistantSource.injectionNames.current.stateNameProvider)();
+
+  // If wanted, tell Math.rand() to only return 0 for translations
+  this.fixMathSeed = (fixedValue = 0) => {
+    return spyOn(Math, "random").and.returnValue(fixedValue);
+  };
+
   // resolve results from ResponseHandler
   this.resolveResponseHandlerResults = async () => {
     await this.responseHandler.resolveResults();

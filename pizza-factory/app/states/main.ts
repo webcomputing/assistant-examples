@@ -17,10 +17,6 @@ export class MainState extends ApplicationState {
     @inject(injectionNames.current.sessionFactory) public sessionFactory: CurrentSessionFactory
   ) {
     super(stateSetupSet);
-    // TBD: Readme schreiben
-    // TBD: Session Strategien
-
-    // TBD: Tests schreiben
   }
 
   /**

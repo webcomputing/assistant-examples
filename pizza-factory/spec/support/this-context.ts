@@ -1,6 +1,6 @@
 import { AlexaSpecHelper, AlexaSpecificHandable, AlexaSpecificTypes } from "assistant-alexa";
 import { GoogleSpecHelper } from "assistant-google";
-import { AssistantJSSetup, BaseState, CurrentSessionFactory, intent, SpecHelper, TranslateValuesFor } from "assistant-source";
+import { AssistantJSSetup, BaseState, CurrentSessionFactory, intent, SpecHelper, Transitionable, TranslateValuesFor } from "assistant-source";
 import { Container } from "inversify-components";
 import { MergedAnswerTypes, MergedHandler } from "../../config/handler";
 
@@ -25,7 +25,16 @@ export interface ThisContext {
   /** prepares current state with intent and runs stateMachine immediately */
   prepareAndRunCurrentStateForTest(stateName: string, intent: intent, additionalExtractions?: {}): Promise<void>;
 
+  /** Gets the current state machine via dependecy injection */
+  getCurrentStateMachine(): Transitionable;
+
+  /** Gets the current state name via dependency injection */
+  getCurrentStateName(): Promise<string>;
+
   resolveResponseHandlerResults(): Promise<void>;
+
+  /** Makes Math.rand only return 0 or the given number. Returns spy on Math. */
+  fixMathSeed(fixedReturnValue?: number): jasmine.Spy;
 
   /**
    * Calls given intent with state machine. Creates the "current" context.

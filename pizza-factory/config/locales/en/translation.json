@@ -20,9 +20,10 @@
         "addToppingToPizzaIntent": [
             "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} I will add {{topping}} to your pizza! Would you like to add another topping to your pizza?"
         ],
-        "getCurrentToppingsIntent": [
-            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} You have added {{topping}} to your pizza!"
-        ],
+        "getCurrentToppingsIntent": {
+            "addedToppings": "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} You have added {{topping}} to your pizza!",
+            "noToppings": "I'm sorry, you have not selected any toppings yet!"
+        },
         "yesGenericIntent": "{Alright|Okay}! Let's add another topping to your pizza!",
         "noGenericIntent": "{Alright|Okay}! Your pizza looks great! You have added {{topping}} to your pizza! Do you want to order another pizza?",
         "helpGenericIntent": "$t(mainState.getToppingsIntent)"

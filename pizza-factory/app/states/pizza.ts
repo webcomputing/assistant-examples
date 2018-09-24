@@ -67,9 +67,9 @@ export class PizzaState extends ApplicationState {
 
     // check, if toppingList is empty
     if (toppingList === "") {
-      this.prompt("I'm sorry, you have not selected any toppings yet!");
+      this.prompt(this.t(".noToppings"));
     } else {
-      this.prompt(this.t({ topping: toppingList }));
+      this.prompt(this.t(".addedToppings", { topping: toppingList }));
     }
   }
 
