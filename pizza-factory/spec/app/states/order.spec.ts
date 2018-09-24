@@ -83,6 +83,11 @@ describe("OrderState", function() {
       });
 
       describe("finish", function() {
+        beforeEach(async function(this: CurrentThisContext) {
+          await this.prepareCurrentStateForTest("OrderState", "noGenericIntent");
+          await this.runMachineAndGetResults("OrderState");
+        });
+
         it("should end the pizza factory", async function(this: CurrentThisContext) {
           expect(this.responseHandlerResults.shouldSessionEnd).toBeTruthy();
         });
