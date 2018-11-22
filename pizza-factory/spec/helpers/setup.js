@@ -34,6 +34,9 @@ beforeEach(function() {
   // Grab the current state's name
   this.getCurrentStateName = () => this.container.inversifyInstance.get(AssistantSource.injectionNames.current.stateNameProvider)();
 
+  // Grab the current session
+  this.sessionFactory = () => this.container.inversifyInstance.get(AssistantSource.injectionNames.current.sessionFactory);
+
   // If wanted, tell Math.rand() to only return 0 for translations
   this.fixMathSeed = (fixedValue = 0) => {
     return spyOn(Math, "random").and.returnValue(fixedValue);

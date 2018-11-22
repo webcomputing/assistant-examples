@@ -1,7 +1,7 @@
 <p align="center"><img src="http://www.antonius-ostermann.de/assets/images/assistantjs.png"></p>
 
 # AssistantJS Examples Pizza-Factory
-This repository initializes an example "pizza factory" assistantJS application. It is configured to use plenty of available assistantJS modules and runs on alexa and dialogflow. By cloning this repository, it should be easy for you to start building your own assistantJS application. Happy coding!
+This repository initializes an example "pizza factory" assistantJS application. It is configured to use plenty of available assistantJS modules and runs on alexa and dialogflow api v2. By cloning this repository, it should be easy for you to start building your own assistantJS application. Happy coding!
 
 ## About
 Make up your own pizza by putting your favourite ingredients on it ("Add tuna to my pizza!") and ask for all mentioned ingredients ("Whats on my pizza so far?") whenever you like. This example teaches you how to deal with [AssistantJS's session management][1] and introduces you into AssistantJS's implementation of the [Levenshtein distance][2].
@@ -19,9 +19,8 @@ As already mentioned, this little "pizza factory" teaches you how to deal with t
 2. assistant-apiai
 3. assistant-google
 4. assistant-validations
-5. assistant-source
-6. assistant-authentication
-7. assistant-generic-utterances
+5. assistant-authentication
+6. assistant-generic-utterances
 
 ## Prerequisites
 1. Proper global installation of assistantJS

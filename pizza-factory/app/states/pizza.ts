@@ -10,7 +10,6 @@ import { ApplicationState } from "./application";
  * If the conversation is in the state, the user wants to order a pizza
  * The user can add toppings to his pizza and get all current toppings which he has add
  */
-
 @injectable()
 export class PizzaState extends ApplicationState {
   constructor(
@@ -24,22 +23,22 @@ export class PizzaState extends ApplicationState {
   /**
    * This intent is called, if the user wants to add toppings to his pizza
    * The user names one of the predefined toppings
-   * Available toppings are: salami, tuna, gouda, onions, toamatoes, spinach
+   * Available toppings are: salami, tuna, gouda, onions, tomatoes, spinach
    * If you want to extend the available toppings, you have to add this topping to the valid toppings array in the entityDictionary
-   * @param machine
    */
   @needs("topping")
   public async addToppingToPizzaIntent(machine: Transitionable): Promise<void> {
     // with the help of levenshtein distance the entityDictionary get one of the valid toppings
     const addedTopping = this.entities.getClosest("topping", ["salami", "tuna", "gouda", "onions", "tomatoes", "spinach"]) as string;
     // get the actual amount of pizzas and generate a key for the sessionFactory
-    const amountOfPizzas: string = (await this.sessionFactory().get("amountOfPizzas")) || "";
-    const key: string = "pizza" + amountOfPizzas;
+    const key: string = this.returnSessionStorageKey(await this.sessionFactory().get("amountOfPizzas"));
+
+    const toppingArray = await this.sessionFactory().get(key);
 
     // check, if this is the first topping on the pizza
-    if ((await this.sessionFactory().get(key)) !== undefined) {
+    if (toppingArray !== undefined) {
       // if the topping is not the first, all toppings so far get stored in a temporaryArray
-      const tempToppingArray = JSON.parse((await this.sessionFactory().get(key)) || "");
+      const tempToppingArray = JSON.parse(toppingArray);
       // push new topping to temporaryArray
       tempToppingArray.push(addedTopping);
       // store temporaryArray with new topping in sessionFactory
@@ -57,19 +56,16 @@ export class PizzaState extends ApplicationState {
    */
   public async getCurrentToppingsIntent() {
     // get the actual amount of pizzas and generate a key for the sessionFactory
-    const amountOfPizzas: string = (await this.sessionFactory().get("amountOfPizzas")) || "";
-    const key: string = "pizza" + amountOfPizzas;
-    // get all toppings out of sessionFactory
-    const sessionToppingArray = await this.sessionFactory().get(key);
+    const key: string = this.returnSessionStorageKey(await this.sessionFactory().get("amountOfPizzas"));
 
-    // create a readable string with all toppings
-    const toppingList: string = await this.getToppingList(sessionToppingArray);
+    // parse toppingArray to
+    const toppingArray = this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get(key));
 
     // check, if toppingList is empty
-    if (toppingList === "") {
+    if (toppingArray.length === 0) {
       this.prompt(this.t(".noToppings"));
     } else {
-      this.prompt(this.t(".addedToppings", { topping: toppingList }));
+      this.prompt(this.t(".addedToppings", { topping: await this.parseToppingList(toppingArray) }));
     }
   }
 
@@ -83,17 +79,13 @@ export class PizzaState extends ApplicationState {
   /**
    * This intent is called, if the user is done adding toppings to his pizza
    * The assistant repeats all toppings and transit to OrderState
-   * @param machine
    */
   public async noGenericIntent(machine: Transitionable) {
     // get the actual amount of pizzas and generate a key for the sessionFactory
-    const amountOfPizzas: string = (await this.sessionFactory().get("amountOfPizzas")) || "";
-    const key: string = "pizza" + amountOfPizzas;
-    // get all toppings out of sessionFactory
-    const sessionToppingArray = await this.sessionFactory().get(key);
+    const key: string = this.returnSessionStorageKey(await this.sessionFactory().get("amountOfPizzas"));
 
     // create a readable string with all toppings
-    const toppingList = await this.getToppingList(sessionToppingArray);
+    const toppingList = await this.parseToppingList(this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get(key)));
 
     this.prompt(this.t({ topping: toppingList }));
     return machine.transitionTo("OrderState");

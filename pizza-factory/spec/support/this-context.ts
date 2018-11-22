@@ -1,6 +1,6 @@
-import { AlexaSpecHelper, AlexaSpecificHandable, AlexaSpecificTypes } from "assistant-alexa";
+import { AlexaSpecHelper } from "assistant-alexa";
 import { GoogleSpecHelper } from "assistant-google";
-import { AssistantJSSetup, BaseState, CurrentSessionFactory, intent, SpecHelper, Transitionable, TranslateValuesFor } from "assistant-source";
+import { AssistantJSSetup, BaseState, intent, Session, SessionFactory, SpecHelper, Transitionable, TranslateValuesFor } from "assistant-source";
 import { Container } from "inversify-components";
 import { MergedAnswerTypes, MergedHandler } from "../../config/handler";
 
@@ -17,6 +17,10 @@ export interface ThisContext {
 
   /** resolved results from ResponseHandler after machine has run or ofter ResponseHandler.send() has been called */
   responseHandlerResults: Partial<MergedAnswerTypes>;
+
+  /** Gets the current session Factory */
+  sessionFactory(): SessionFactory;
+
   translateValuesFor(): TranslateValuesFor;
 
   /** prepares current state with intent */

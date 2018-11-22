@@ -1,7 +1,22 @@
 {
     "root": {
         "cancelGenericIntent": "{Goodbye!|See you later!}",
-        "helpGenericIntent": "I don't know how I can help you out there, sorry..."
+        "stopGenericIntent": {
+            "alexa": [
+              "Goodbye!",
+              "<say-as interpret-as=\"interjection\">See you later!</say-as>",
+              "See you!"
+            ],
+            "google": [
+                "Goodbye!",
+                "See you later!",
+                "See you!"
+            ]
+          },
+        "helpGenericIntent": "I don't know how I can help you out there, sorry...",
+        "connectors": {
+            "and": "and"
+        }
     },
     "mainState": {
         "invokeGenericIntent": {
@@ -9,17 +24,14 @@
             "google": "Welcome, Google user to my pizza factory!"            
         },
         "getToppingsIntent": [
-            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} You can add salami, tuna, gouda, onions, tomatoes or spinach to your pizza!"
+            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} You can add salami, tuna, gouda, onions, tomatoes or spinach to your pizza!",
+            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} The ingredients are: salami, tuna, gouda, onions, tomatoes or spinach!"
         ],
-        "orderPizzaIntent": [
-            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} Which toppings do you want to add?"
-        ],
+        "orderPizzaIntent": "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} Which toppings do you want to add?",  
         "helpGenericIntent": "You can order your pizza or get a list of available toppings!"
     },
     "pizzaState": {
-        "addToppingToPizzaIntent": [
-            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} I will add {{topping}} to your pizza! Would you like to add another topping to your pizza?"
-        ],
+        "addToppingToPizzaIntent": "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} I will add {{topping}} to your pizza! Would you like to add another topping to your pizza?",
         "getCurrentToppingsIntent": {
             "addedToppings": "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} You have added {{topping}} to your pizza!",
             "noToppings": "I'm sorry, you have not selected any toppings yet!"

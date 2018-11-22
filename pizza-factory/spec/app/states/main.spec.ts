@@ -16,12 +16,18 @@ describe("MainState", function() {
         beforeEach(async function(this: CurrentThisContext) {
           await this.prepareCurrentStateForTest("MainState", "invokeGenericIntent");
           this.currentState = this.grabState<MainState>(await this.getCurrentStateName());
-          await this.currentState.sessionFactory().set("amountOfPizzas", "1");
+          // The current states sessionFactory received from the container
+          await this.sessionFactory()
+            .getCurrentSession()
+            .set("amountOfPizzas", "1");
           await this.runMachineAndGetResults("MainState");
         });
 
         it("stores amount of pizzas into session", async function(this: CurrentThisContext) {
-          const amountOfPizzas = (await this.currentState.sessionFactory().get("amountOfPizzas")) || 0;
+          const amountOfPizzas =
+            (await this.sessionFactory()
+              .getCurrentSession()
+              .get("amountOfPizzas")) || 0;
           expect(+amountOfPizzas).toBe(1);
           expect(+amountOfPizzas).not.toBe(0);
         });

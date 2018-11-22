@@ -5,7 +5,7 @@ import { AssistantJSConfiguration } from "assistant-source";
  * In AssistantJS, every component may have it's own configuration settings. For example,
  * the interface "I18nConfiguration" describes the configuration of AssistantJS's internal
  * i18n component.
- * But to make it easier for you, you don't need to split up these configuations on your own: 
+ * But to make it easier for you, you don't need to split up these configuations on your own:
  * The interface "AssistantJSConfiguration" already describes all configuration options of all core AssistantJS components.
  *
  * If you want to add configuration settings from another component, for example "assistant-alexa", you
@@ -31,7 +31,7 @@ const configuration: AssistantJSConfiguration & AlexaConfigurationAttribute & Ap
 
   // Alexa Configuration with
   alexa: {
-    applicationID: "amzn1.ask.skill.b65ad48a-e27e-4c0e-ba68-f687d18bf769",
+    applicationID: "amzn1.ask.skill.fc12fd31-0da0-4d7f-9548-fcf4985aa7a3",
     route: "/alexa",
     useVerifier: false,
     invocationName: "pizza factory",

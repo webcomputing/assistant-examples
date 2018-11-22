@@ -16,12 +16,17 @@ describe("OrderState", function() {
         beforeEach(async function(this: CurrentThisContext) {
           await this.prepareCurrentStateForTest("OrderState", "yesGenericIntent");
           this.currentState = this.grabState<OrderState>(await this.getCurrentStateName());
-          await this.currentState.sessionFactory().set("amountOfPizzas", "1");
+          await this.sessionFactory()
+            .getCurrentSession()
+            .set("amountOfPizzas", "1");
           await this.runMachineAndGetResults("OrderState");
         });
 
         it("increments the amount of Pizzas", async function(this: CurrentThisContext) {
-          const amountOfPizzas = (await this.currentState.sessionFactory().get("amountOfPizzas")) || 0;
+          const amountOfPizzas =
+            (await this.sessionFactory()
+              .getCurrentSession()
+              .get("amountOfPizzas")) || 0;
           const newAmountOfPizzas: number = +amountOfPizzas + 1;
           expect(+newAmountOfPizzas).toBeGreaterThan(1);
           expect(newAmountOfPizzas).toBeGreaterThan(+amountOfPizzas);
@@ -50,8 +55,12 @@ describe("OrderState", function() {
         beforeEach(async function(this: CurrentThisContext) {
           const myToppings = ["salami", "gouda", "spinach"];
           await this.prepareCurrentStateForTest("OrderState", "noGenericIntent");
-          await this.currentState.sessionFactory().set("amountOfPizzas", "1");
-          await this.currentState.sessionFactory().set("pizza1", JSON.stringify(myToppings));
+          await this.sessionFactory()
+            .getCurrentSession()
+            .set("amountOfPizzas", "1");
+          await this.sessionFactory()
+            .getCurrentSession()
+            .set("pizza1", JSON.stringify(myToppings));
           await this.runMachineAndGetResults("OrderState");
         });
 
@@ -67,9 +76,15 @@ describe("OrderState", function() {
           const myToppings1 = ["salami", "gouda", "spinach"];
           const myToppings2 = ["gouda", "tuna", "tomatoes"];
           await this.prepareCurrentStateForTest("OrderState", "noGenericIntent");
-          await this.currentState.sessionFactory().set("amountOfPizzas", "2");
-          await this.currentState.sessionFactory().set("pizza1", JSON.stringify(myToppings1));
-          await this.currentState.sessionFactory().set("pizza2", JSON.stringify(myToppings2));
+          await this.sessionFactory()
+            .getCurrentSession()
+            .set("amountOfPizzas", "2");
+          await this.sessionFactory()
+            .getCurrentSession()
+            .set("pizza1", JSON.stringify(myToppings1));
+          await this.sessionFactory()
+            .getCurrentSession()
+            .set("pizza2", JSON.stringify(myToppings2));
           await this.runMachineAndGetResults("OrderState");
         });
 

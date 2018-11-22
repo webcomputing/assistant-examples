@@ -28,7 +28,7 @@ export function initializeSetups(
   localFilterSetup: FilterSetup,
   addOnly = false
 ) {
-  // Register all additional AssistantJS components - currently none
+  // Register all additional AssistantJS components
   localAssistantJs.registerComponent(alexaDescriptor);
   localAssistantJs.registerComponent(validationsDescriptor);
   localAssistantJs.registerComponent(apiAiDescriptor);
