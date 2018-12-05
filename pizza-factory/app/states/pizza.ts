@@ -31,21 +31,29 @@ export class PizzaState extends ApplicationState {
     // with the help of levenshtein distance the entityDictionary get one of the valid toppings
     const addedTopping = this.entities.getClosest("topping", ["salami", "tuna", "gouda", "onions", "tomatoes", "spinach"]) as string;
     // get the actual amount of pizzas and generate a key for the sessionFactory
-    const key: string = this.returnSessionStorageKey(await this.sessionFactory().get("amountOfPizzas"));
+    // const key: string = this.returnSessionStorageKey(await this.sessionFactory().get("amountOfPizzas"));
 
-    const toppingArray = await this.sessionFactory().get(key);
+    // const toppingArray = await this.sessionFactory().get(key);
+
+    const temporaryToppingArray: string[] = this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get("temporaryToppingArray"));
+    temporaryToppingArray.push(addedTopping);
+    await this.sessionFactory().set("temporaryToppingArray", JSON.stringify(temporaryToppingArray));
+
+    console.log("actual topping:", this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get("temporaryToppingArray")));
+
+    // [['tuna', 'spinach'],['gouda', 'salami']]
 
     // check, if this is the first topping on the pizza
-    if (toppingArray !== undefined) {
-      // if the topping is not the first, all toppings so far get stored in a temporaryArray
-      const tempToppingArray = JSON.parse(toppingArray);
-      // push new topping to temporaryArray
-      tempToppingArray.push(addedTopping);
-      // store temporaryArray with new topping in sessionFactory
-      await this.sessionFactory().set(key, JSON.stringify(tempToppingArray));
-    } else {
-      await this.sessionFactory().set(key, JSON.stringify([addedTopping]));
-    }
+    // if (toppingArray !== undefined) {
+    // if the topping is not the first, all toppings so far get stored in a temporaryArray
+    // const tempToppingArray = JSON.parse(toppingArray);
+    // push new topping to temporaryArray
+    // tempToppingArray.push(addedTopping);
+    // store temporaryArray with new topping in sessionFactory
+    // await this.sessionFactory().set(key, JSON.stringify(tempToppingArray));
+    // } else {
+    // await this.sessionFactory().set(key, JSON.stringify([addedTopping]));
+    // }
 
     this.prompt(this.t({ topping: addedTopping }));
   }
@@ -56,16 +64,18 @@ export class PizzaState extends ApplicationState {
    */
   public async getCurrentToppingsIntent() {
     // get the actual amount of pizzas and generate a key for the sessionFactory
-    const key: string = this.returnSessionStorageKey(await this.sessionFactory().get("amountOfPizzas"));
+    // const key: string = this.returnSessionStorageKey(await this.sessionFactory().get("amountOfPizzas"));
 
     // parse toppingArray to
-    const toppingArray = this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get(key));
+    // const toppingArray = this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get(key));
+
+    const temporaryToppingArray: string[] = this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get("temporaryToppingArray"));
 
     // check, if toppingList is empty
-    if (toppingArray.length === 0) {
+    if (temporaryToppingArray.length === 0) {
       this.prompt(this.t(".noToppings"));
     } else {
-      this.prompt(this.t(".addedToppings", { topping: await this.parseToppingList(toppingArray) }));
+      this.prompt(this.t(".addedToppings", { topping: await this.parseToppingListToReadableString(temporaryToppingArray) }));
     }
   }
 
@@ -82,12 +92,16 @@ export class PizzaState extends ApplicationState {
    */
   public async noGenericIntent(machine: Transitionable) {
     // get the actual amount of pizzas and generate a key for the sessionFactory
-    const key: string = this.returnSessionStorageKey(await this.sessionFactory().get("amountOfPizzas"));
+    // const key: string = this.returnSessionStorageKey(await this.sessionFactory().get("amountOfPizzas"));
 
     // create a readable string with all toppings
-    const toppingList = await this.parseToppingList(this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get(key)));
+    // const toppingList = await this.parseToppingList(this.temporaryToppingArray);
 
-    this.prompt(this.t({ topping: toppingList }));
+    const temporaryToppingArray: string[] = this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get("temporaryToppingArray"));
+
+    console.log("all toppings:", temporaryToppingArray);
+
+    this.prompt(this.t({ topping: await this.parseToppingListToReadableString(temporaryToppingArray) }));
     return machine.transitionTo("OrderState");
   }
 }

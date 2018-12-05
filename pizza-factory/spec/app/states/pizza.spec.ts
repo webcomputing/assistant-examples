@@ -70,6 +70,7 @@ describe("PizzaState", function() {
           );
         });
       });
+
       describe("pizza has more toppings", function() {
         beforeEach(async function(this: CurrentThisContext) {
           const myToppings = ["salami", "gouda", "spinach"];
@@ -86,6 +87,7 @@ describe("PizzaState", function() {
           );
         });
       });
+
       describe("pizza has no toppings yet", function() {
         beforeEach(async function(this: CurrentThisContext) {
           const myToppings = [];

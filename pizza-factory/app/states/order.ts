@@ -22,11 +22,26 @@ export class OrderState extends ApplicationState {
    * This intent is called, if the user wants to add ingredients to another pizza
    */
   public async yesGenericIntent(machine: Transitionable) {
-    this.prompt(this.t());
-
     // every single pizza is stored in his own key-value pair
-    await this.sessionFactory().set("amountOfPizzas", String(this.parseAmountOfPizzasToNumber(await this.sessionFactory().get("amountOfPizzas")) + 1));
+    // await this.sessionFactory().set("amountOfPizzas", String(this.parseAmountOfPizzasToNumber(await this.sessionFactory().get("amountOfPizzas")) + 1));
 
+    // TBD Methode dafür
+    // this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get("pizzasWithToppingsArray"))
+
+    const pizzasWithToppingsArray: string[][] = this.parseStringifiedPizzasWithToppingsArrayToStringArray(
+      await this.sessionFactory().get("pizzasWithToppingsArray")
+    );
+
+    console.log("for dem pushen", await this.sessionFactory().get("pizzasWithToppingsArray"));
+
+    pizzasWithToppingsArray.push(this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get("temporaryToppingArray")));
+
+    console.log("all currentPizzas:", pizzasWithToppingsArray);
+
+    await this.sessionFactory().set("pizzasWithToppingsArray", JSON.stringify(pizzasWithToppingsArray));
+    await this.sessionFactory().set("temporaryToppingArray", JSON.stringify([]));
+
+    this.prompt(this.t());
     return machine.transitionTo("PizzaState");
   }
 
@@ -35,44 +50,49 @@ export class OrderState extends ApplicationState {
    * The assistant generate a list with all pizzas and their associated toppings and return it
    */
   public async noGenericIntent() {
+    // [['tuna', 'spinach', 'onions'], ['gouda', 'salami'], ['tuna', 'spinach', 'onions'] ]
+    // a pizza with tuna, spinach and onions, a pizza with gouda and salami and a pizza with tuna, spinach and onions
+
     let pizzaList: string = "";
     const pizzaArray: string[] = [];
-    const amountOfPizzas: number = this.parseAmountOfPizzasToNumber(await this.sessionFactory().get("amountOfPizzas"));
+
+    const pizzasWithToppingsArray: string[][] = this.parseStringifiedPizzasWithToppingsArrayToStringArray(
+      await this.sessionFactory().get("pizzasWithToppingsArray")
+    );
+
+    // const amountOfPizzas: number = this.parseAmountOfPizzasToNumber(await this.sessionFactory().get("amountOfPizzas"));
 
     // iterate the key-value pair of pizzas
-    for (let i: number = 1; i <= amountOfPizzas; i++) {
-      const test: string[] = this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get("pizza" + i));
-
-      pizzaList += test.join(", ").replace(/,(?!.*,)/, ` ${await this.t(".connectors.and")}`);
-    }
-
-    console.log("HSDKLFÖSDKLF", pizzaList);
-    // a pizza with salami and a pizza with tuna and gouda and a pizza with spinach, onion and gouda! They
-
-    /* toppingArray.join(", ").replace(/,(?!.*,)/, ` ${await this.t(".connectors.and")}`);
-
-    pizzaList += "a pizza with ";
-
-    const key: string = "pizza" + i;
-
-    // create a readable string with all toppings
-    const toppingList = await this.parseToppingList(this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get(key)));
-
-    // add toppingList to string
-    pizzaList += toppingList;
-
-    if (i + 1 === amountOfPizzas) {
-      pizzaList += " and ";
-    } else if (i < amountOfPizzas) {
-      pizzaList += ", ";
+    /* for (let i: number = 1; i <= amountOfPizzas; i++) {
+      const toppings: string[] = this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get("pizza" + i));
+      pizzaArray.push(`${await this.t(".pizzaDelivery.aPizzaWith")} ` + toppings.join(", ").replace(/,(?!.*,)/, ` ${await this.t(".connectors.and")}`));
     } */
 
-    if (amountOfPizzas > 1) {
-      pizzaList += "! They";
-    } else {
-      pizzaList += "! Your pizza";
-    }
+    // const test = pizzasWithToppingsArray.map(x => x.join(", ").replace(/,(?!.*,)/, ` and`));
 
-    this.endSessionWith(this.t({ pizzas: pizzaList }));
+    console.log("Vorher", pizzasWithToppingsArray);
+
+    const tes = pizzasWithToppingsArray
+      .map(pizzasWithToppings => pizzasWithToppings.join(", ").replace(/,(?!.*,)/, ` and`))
+      .join(".")
+      .replace(/[.](?=.*[.])/g, `, `)
+      .replace(/[.](?!.*[.])/, ` ${await this.t(".connectors.and")} `);
+
+    console.log("HUHU", tes);
+
+    // create a readable string
+    pizzaList = pizzaArray
+      .join(".")
+      .replace(/[.](?=.*[.])/g, `, `)
+      .replace(/[.](?!.*[.])/, ` ${await this.t(".connectors.and")} `);
+
+    this.endSessionWith(
+      this.t({
+        pizzas:
+          pizzasWithToppingsArray.length > 1
+            ? pizzaList.concat(`! ${await this.t(".beginning.they")}`)
+            : pizzaList.concat(`! ${await this.t(".pizzaDelivery.yourPizza")}`),
+      })
+    );
   }
 }

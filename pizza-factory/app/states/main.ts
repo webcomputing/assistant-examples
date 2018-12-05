@@ -31,9 +31,8 @@ export class MainState extends ApplicationState {
    * Transition to PizzaState
    */
   public async orderPizzaIntent(machine: Transitionable): Promise<void> {
-    // set amount of pizzas to 1 in sessionFactory
-    // it is important, if you want to order more than one pizza
-    await this.sessionFactory().set("amountOfPizzas", "1");
+    // prepare session storage for pizza delivery
+    this.sessionFactory().set("temporaryToppingArray", JSON.stringify([]));
     this.prompt(this.t());
     return machine.transitionTo("PizzaState");
   }

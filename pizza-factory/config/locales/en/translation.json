@@ -16,6 +16,13 @@
         "helpGenericIntent": "I don't know how I can help you out there, sorry...",
         "connectors": {
             "and": "and"
+        },
+        "beginning": {
+            "they": "They"
+        },
+        "pizzaDelivery": {
+            "aPizzaWith": "a pizza with",
+            "yourPizza": "Your pizza "
         }
     },
     "mainState": {

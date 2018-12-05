@@ -6,7 +6,8 @@
         "{I want to|} order {my|a} pizza"
     ],
     "addToppingToPizzaIntent": [
-        "{I want to|Please|} add {{topping}} {to my pizza|to the pizza|}"
+        "{I want to|Please|} add {{topping}} {to my pizza|to the pizza|}",
+        "{{topping}}"
     ],
     "getCurrentToppingsIntent": [
         "What's on my pizza so far",

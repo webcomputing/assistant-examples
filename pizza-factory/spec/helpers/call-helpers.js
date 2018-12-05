@@ -10,6 +10,7 @@ beforeEach(function() {
     // Append additional request context if wanted
     if (typeof this.additionalRequestContext !== "undefined") Object.assign(additionalContext, this.additionalRequestContext);
     let responseHandler = await this.platforms.current.pretendIntentCalled(intent, false, additionalExtractions, additionalContext);
+
     if (autoStart) {
       await this.specHelper.runMachine();
       // is only possible after running the statemachine

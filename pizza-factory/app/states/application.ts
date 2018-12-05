@@ -1,5 +1,6 @@
 import { BaseState } from "assistant-source";
 import { injectable, unmanaged } from "inversify";
+
 import { MergedAnswerTypes, MergedHandler, MergedSetupSet } from "../../config/handler";
 
 @injectable()
@@ -49,6 +50,17 @@ export class ApplicationState extends BaseState<MergedAnswerTypes, MergedHandler
   }
 
   /**
+   * Parse stringified topping array and return an string array
+   * Either its filled with toppings or if undefined its empty
+   * @param {string|undefined} unparsedToppingArray
+   */
+  public parseStringifiedPizzasWithToppingsArrayToStringArray(unparsedPizzasWithToppingsArray: string | undefined): string[][] {
+    // check if undefined
+    const pizzasWithToppingsArray: string[][] = unparsedPizzasWithToppingsArray !== undefined ? JSON.parse(unparsedPizzasWithToppingsArray) : [];
+    return pizzasWithToppingsArray;
+  }
+
+  /**
    * Parse stringified topping array or return a empty string if undefined
    * @param {string|undefined} unparsedAmountOfPizzas
    */
@@ -62,7 +74,7 @@ export class ApplicationState extends BaseState<MergedAnswerTypes, MergedHandler
    * Create a readable string with all toppings
    * @param {string[]} toppingArray
    */
-  public async parseToppingList(toppingArray: string[]): Promise<string> {
+  public async parseToppingListToReadableString(toppingArray: string[]): Promise<string> {
     return toppingArray.join(", ").replace(/,(?!.*,)/, ` ${await this.t(".connectors.and")}`);
   }
 }
