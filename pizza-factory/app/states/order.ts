@@ -50,38 +50,16 @@ export class OrderState extends ApplicationState {
    * The assistant generate a list with all pizzas and their associated toppings and return it
    */
   public async noGenericIntent() {
-    // [['tuna', 'spinach', 'onions'], ['gouda', 'salami'], ['tuna', 'spinach', 'onions'] ]
-    // a pizza with tuna, spinach and onions, a pizza with gouda and salami and a pizza with tuna, spinach and onions
-
-    let pizzaList: string = "";
-    const pizzaArray: string[] = [];
-
     const pizzasWithToppingsArray: string[][] = this.parseStringifiedPizzasWithToppingsArrayToStringArray(
       await this.sessionFactory().get("pizzasWithToppingsArray")
     );
 
-    // const amountOfPizzas: number = this.parseAmountOfPizzasToNumber(await this.sessionFactory().get("amountOfPizzas"));
-
-    // iterate the key-value pair of pizzas
-    /* for (let i: number = 1; i <= amountOfPizzas; i++) {
-      const toppings: string[] = this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get("pizza" + i));
-      pizzaArray.push(`${await this.t(".pizzaDelivery.aPizzaWith")} ` + toppings.join(", ").replace(/,(?!.*,)/, ` ${await this.t(".connectors.and")}`));
-    } */
-
-    // const test = pizzasWithToppingsArray.map(x => x.join(", ").replace(/,(?!.*,)/, ` and`));
-
-    console.log("Vorher", pizzasWithToppingsArray);
-
-    const tes = pizzasWithToppingsArray
-      .map(pizzasWithToppings => pizzasWithToppings.join(", ").replace(/,(?!.*,)/, ` and`))
-      .join(".")
-      .replace(/[.](?=.*[.])/g, `, `)
-      .replace(/[.](?!.*[.])/, ` ${await this.t(".connectors.and")} `);
-
-    console.log("HUHU", tes);
-
     // create a readable string
-    pizzaList = pizzaArray
+    const result: string = (await Promise.all(
+      pizzasWithToppingsArray.map(
+        async pizzasWithToppings => `${await this.t(".pizzaDelivery.aPizzaWith")} ` + pizzasWithToppings.join(", ").replace(/,(?!.*,)/, ` and`)
+      )
+    ))
       .join(".")
       .replace(/[.](?=.*[.])/g, `, `)
       .replace(/[.](?!.*[.])/, ` ${await this.t(".connectors.and")} `);
@@ -90,8 +68,8 @@ export class OrderState extends ApplicationState {
       this.t({
         pizzas:
           pizzasWithToppingsArray.length > 1
-            ? pizzaList.concat(`! ${await this.t(".beginning.they")}`)
-            : pizzaList.concat(`! ${await this.t(".pizzaDelivery.yourPizza")}`),
+            ? result.concat(`! ${await this.t(".beginning.they")}`)
+            : result.concat(`! ${await this.t(".pizzaDelivery.yourPizza")}`),
       })
     );
   }
