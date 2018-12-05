@@ -22,23 +22,15 @@ export class OrderState extends ApplicationState {
    * This intent is called, if the user wants to add ingredients to another pizza
    */
   public async yesGenericIntent(machine: Transitionable) {
-    // every single pizza is stored in his own key-value pair
-    // await this.sessionFactory().set("amountOfPizzas", String(this.parseAmountOfPizzasToNumber(await this.sessionFactory().get("amountOfPizzas")) + 1));
-
-    // TBD Methode dafür
-    // this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get("pizzasWithToppingsArray"))
-
     const pizzasWithToppingsArray: string[][] = this.parseStringifiedPizzasWithToppingsArrayToStringArray(
       await this.sessionFactory().get("pizzasWithToppingsArray")
     );
 
-    console.log("for dem pushen", await this.sessionFactory().get("pizzasWithToppingsArray"));
-
+    // push temporaryToppingArray to pizzasWithToppingsArray
     pizzasWithToppingsArray.push(this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get("temporaryToppingArray")));
 
-    console.log("all currentPizzas:", pizzasWithToppingsArray);
-
     await this.sessionFactory().set("pizzasWithToppingsArray", JSON.stringify(pizzasWithToppingsArray));
+    // clear temporaryToppingArray
     await this.sessionFactory().set("temporaryToppingArray", JSON.stringify([]));
 
     this.prompt(this.t());
@@ -57,7 +49,7 @@ export class OrderState extends ApplicationState {
     // create a readable string
     const result: string = (await Promise.all(
       pizzasWithToppingsArray.map(
-        async pizzasWithToppings => `${await this.t(".pizzaDelivery.aPizzaWith")} ` + pizzasWithToppings.join(", ").replace(/,(?!.*,)/, ` and`)
+        async pizzasWithToppings => `${await this.t(".pizzaDelivery.aPizzaWith")} ${pizzasWithToppings.join(", ").replace(/,(?!.*,)/, ` and`)}`
       )
     ))
       .join(".")

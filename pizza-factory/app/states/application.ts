@@ -31,14 +31,6 @@ export class ApplicationState extends BaseState<MergedAnswerTypes, MergedHandler
   }
 
   /**
-   * Create key for session storage
-   * @param {string|undefined} unparsedAmountOfPizzas
-   */
-  public returnSessionStorageKey(unparsedAmountOfPizzas: string | undefined): string {
-    return "pizza" + this.parseAmountOfPizzasToNumber(unparsedAmountOfPizzas);
-  }
-
-  /**
    * Parse stringified topping array and return an string array
    * Either its filled with toppings or if undefined its empty
    * @param {string|undefined} unparsedToppingArray
@@ -50,24 +42,14 @@ export class ApplicationState extends BaseState<MergedAnswerTypes, MergedHandler
   }
 
   /**
-   * Parse stringified topping array and return an string array
-   * Either its filled with toppings or if undefined its empty
+   * Parse stringified pizzaWithToppings array and return an string array
+   * Either its filled with pizzaWithToppings or if undefined its empty
    * @param {string|undefined} unparsedToppingArray
    */
   public parseStringifiedPizzasWithToppingsArrayToStringArray(unparsedPizzasWithToppingsArray: string | undefined): string[][] {
     // check if undefined
     const pizzasWithToppingsArray: string[][] = unparsedPizzasWithToppingsArray !== undefined ? JSON.parse(unparsedPizzasWithToppingsArray) : [];
     return pizzasWithToppingsArray;
-  }
-
-  /**
-   * Parse stringified topping array or return a empty string if undefined
-   * @param {string|undefined} unparsedAmountOfPizzas
-   */
-  public parseAmountOfPizzasToNumber(unparsedAmountOfPizzas: string | undefined): number {
-    // check if undefined
-    const amountOfPizzas: number = unparsedAmountOfPizzas !== undefined ? Number(unparsedAmountOfPizzas) : 0;
-    return amountOfPizzas;
   }
 
   /**
