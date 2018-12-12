@@ -46,8 +46,8 @@ describe("MainState", function() {
       });
 
       it("transits to PizzaState", async function() {
-        const state = await this.getCurrentStateName();
-        expect(state).toEqual("PizzaState");
+        this.params.state = await this.getCurrentStateName();
+        expect(this.params.state).toEqual("PizzaState");
       });
     });
 

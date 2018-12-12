@@ -24,18 +24,21 @@ describe("OrderState", function() {
         });
 
         it("transits to PizzaState", async function() {
-          const state = await this.getCurrentStateName();
-          expect(state).toEqual("PizzaState");
+          this.params.state = await this.getCurrentStateName();
+          expect(this.params.state).toEqual("PizzaState");
         });
       });
     });
 
     describe("noGenericIntent", function() {
+      beforeEach(async function(this: CurrentThisContext) {
+        this.params.pizzasWithToppingsArray = [["salami"]];
+      });
+
       describe("order 1 pizza with 1 topping", function() {
         beforeEach(async function(this: CurrentThisContext) {
-          const pizzasWithToppingsArray = [["salami"]];
           await this.prepareCurrentStateForTest("OrderState", "noGenericIntent");
-          await this.sessionFactory().set("pizzasWithToppingsArray", JSON.stringify(pizzasWithToppingsArray));
+          await this.sessionFactory().set("pizzasWithToppingsArray", JSON.stringify(this.params.pizzasWithToppingsArray));
           await this.runMachineAndGetResults("OrderState");
         });
 
@@ -50,16 +53,18 @@ describe("OrderState", function() {
 
       describe("order 1 pizza with 2 toppings", function() {
         beforeEach(async function(this: CurrentThisContext) {
-          const pizzasWithToppingsArray = [["salami", "gouda"]];
+          this.params.pizzasWithToppingsArray[0].push("gouda");
           await this.prepareCurrentStateForTest("OrderState", "noGenericIntent");
-          await this.sessionFactory().set("pizzasWithToppingsArray", JSON.stringify(pizzasWithToppingsArray));
+          await this.sessionFactory().set("pizzasWithToppingsArray", JSON.stringify(this.params.pizzasWithToppingsArray));
           await this.runMachineAndGetResults("OrderState");
         });
 
         it("returns the list of pizzas", async function(this: CurrentThisContext) {
           expect(await this.responseHandlerResults.voiceMessage!.text).toContain(
             (await this.translateValuesFor()("orderState.noGenericIntent", {
-              pizzas: `a pizza with salami and gouda! ${await this.translateValuesFor()("root.pizzaDelivery.yourPizza")}`,
+              pizzas: `a pizza with ${this.params.pizzasWithToppingsArray[0][0]} and ${
+                this.params.pizzasWithToppingsArray[0][1]
+              }! ${await this.translateValuesFor()("root.pizzaDelivery.yourPizza")}`,
             }))[0]
           );
         });
@@ -67,16 +72,18 @@ describe("OrderState", function() {
 
       describe("order 1 pizza with 3 toppings", function() {
         beforeEach(async function(this: CurrentThisContext) {
-          const pizzasWithToppingsArray = [["salami", "gouda", "spinach"]];
+          this.params.pizzasWithToppingsArray[0].push("gouda", "spinach");
           await this.prepareCurrentStateForTest("OrderState", "noGenericIntent");
-          await this.sessionFactory().set("pizzasWithToppingsArray", JSON.stringify(pizzasWithToppingsArray));
+          await this.sessionFactory().set("pizzasWithToppingsArray", JSON.stringify(this.params.pizzasWithToppingsArray));
           await this.runMachineAndGetResults("OrderState");
         });
 
         it("returns the list of pizzas", async function(this: CurrentThisContext) {
           expect(await this.responseHandlerResults.voiceMessage!.text).toContain(
             (await this.translateValuesFor()("orderState.noGenericIntent", {
-              pizzas: `a pizza with salami, gouda and spinach! ${await this.translateValuesFor()("root.pizzaDelivery.yourPizza")}`,
+              pizzas: `a pizza with ${this.params.pizzasWithToppingsArray[0][0]}, ${this.params.pizzasWithToppingsArray[0][1]} and ${
+                this.params.pizzasWithToppingsArray[0][2]
+              }! ${await this.translateValuesFor()("root.pizzaDelivery.yourPizza")}`,
             }))[0]
           );
         });
@@ -84,18 +91,22 @@ describe("OrderState", function() {
 
       describe("order more pizzas", function() {
         beforeEach(async function(this: CurrentThisContext) {
-          const pizzasWithToppingsArray = [["tuna"], ["salami", "gouda", "spinach"], ["gouda", "tuna", "tomatoes"], ["onions", "spinach"]];
+          this.params.pizzasWithToppingsArray = [["tuna"], ["salami", "gouda", "spinach"], ["gouda", "tuna", "tomatoes"], ["onions", "spinach"]];
           await this.prepareCurrentStateForTest("OrderState", "noGenericIntent");
-          await this.sessionFactory().set("pizzasWithToppingsArray", JSON.stringify(pizzasWithToppingsArray));
+          await this.sessionFactory().set("pizzasWithToppingsArray", JSON.stringify(this.params.pizzasWithToppingsArray));
           await this.runMachineAndGetResults("OrderState");
         });
 
         it("returns the list of pizzas", async function(this: CurrentThisContext) {
           expect(await this.responseHandlerResults.voiceMessage!.text).toContain(
             (await this.translateValuesFor()("orderState.noGenericIntent", {
-              pizzas: `a pizza with tuna, a pizza with salami, gouda and spinach, a pizza with gouda, tuna and tomatoes and a pizza with onions and spinach! ${await this.translateValuesFor()(
-                "root.beginning.they"
-              )}`,
+              pizzas: `a pizza with ${this.params.pizzasWithToppingsArray[0][0]}, a pizza with ${this.params.pizzasWithToppingsArray[1][0]}, ${
+                this.params.pizzasWithToppingsArray[1][1]
+              } and ${this.params.pizzasWithToppingsArray[1][2]}, a pizza with ${this.params.pizzasWithToppingsArray[2][0]}, ${
+                this.params.pizzasWithToppingsArray[2][1]
+              } and ${this.params.pizzasWithToppingsArray[2][2]} and a pizza with ${this.params.pizzasWithToppingsArray[3][0]} and ${
+                this.params.pizzasWithToppingsArray[3][1]
+              }! ${await this.translateValuesFor()("root.beginning.they")}`,
             }))[0]
           );
         });

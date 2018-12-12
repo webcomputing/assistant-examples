@@ -21,6 +21,9 @@ export interface ThisContext {
   /** Gets the current session Factory */
   sessionFactory: CurrentSessionFactory;
 
+  /** Use this to add any test parameters */
+  params: any;
+
   translateValuesFor(): TranslateValuesFor;
 
   /** prepares current state with intent */

@@ -42,6 +42,9 @@ beforeEach(function() {
     return spyOn(Math, "random").and.returnValue(fixedValue);
   };
 
+  // Set params to {} to have an easier access in tests
+  this.params = {};
+
   // resolve results from ResponseHandler
   this.resolveResponseHandlerResults = async () => {
     await this.responseHandler.resolveResults();
