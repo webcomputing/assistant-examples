@@ -56,11 +56,9 @@ describe("PizzaState", function() {
     describe("getCurrentToppingsIntent", function() {
       describe("pizza has 1 topping", function() {
         beforeEach(async function(this: CurrentThisContext) {
-          const myTopping = ["salami"];
-          await this.prepareCurrentStateForTest("PizzaState", "getCurrentToppingsIntent", {});
-          this.currentState = this.grabState<PizzaState>(await this.getCurrentStateName());
-          await this.currentState.sessionFactory().set("amountOfPizzas", "1");
-          await this.currentState.sessionFactory().set("pizza1", JSON.stringify(myTopping));
+          const temporaryToppingArray = ["salami"];
+          await this.prepareCurrentStateForTest("PizzaState", "getCurrentToppingsIntent");
+          await this.sessionFactory().set("temporaryToppingArray", JSON.stringify(temporaryToppingArray));
           await this.runMachineAndGetResults("PizzaState");
         });
 
@@ -71,13 +69,26 @@ describe("PizzaState", function() {
         });
       });
 
+      describe("pizza has 2 toppings", function() {
+        beforeEach(async function(this: CurrentThisContext) {
+          const temporaryToppingArray = ["salami", "gouda"];
+          await this.prepareCurrentStateForTest("PizzaState", "getCurrentToppingsIntent");
+          await this.sessionFactory().set("temporaryToppingArray", JSON.stringify(temporaryToppingArray));
+          await this.runMachineAndGetResults("PizzaState");
+        });
+
+        it("gets current topping on pizza", async function(this: CurrentThisContext) {
+          expect(await this.responseHandlerResults.voiceMessage!.text).toContain(
+            (await this.translateValuesFor()("pizzaState.getCurrentToppingsIntent.addedToppings", { topping: "salami and gouda" }))[0]
+          );
+        });
+      });
+
       describe("pizza has more toppings", function() {
         beforeEach(async function(this: CurrentThisContext) {
-          const myToppings = ["salami", "gouda", "spinach"];
-          await this.prepareCurrentStateForTest("PizzaState", "getCurrentToppingsIntent", {});
-          this.currentState = this.grabState<PizzaState>(await this.getCurrentStateName());
-          await this.currentState.sessionFactory().set("amountOfPizzas", "1");
-          await this.currentState.sessionFactory().set("pizza1", JSON.stringify(myToppings));
+          const temporaryToppingArray = ["salami", "gouda", "spinach"];
+          await this.prepareCurrentStateForTest("PizzaState", "getCurrentToppingsIntent");
+          await this.sessionFactory().set("temporaryToppingArray", JSON.stringify(temporaryToppingArray));
           await this.runMachineAndGetResults("PizzaState");
         });
 
@@ -90,11 +101,9 @@ describe("PizzaState", function() {
 
       describe("pizza has no toppings yet", function() {
         beforeEach(async function(this: CurrentThisContext) {
-          const myToppings = [];
-          await this.prepareCurrentStateForTest("PizzaState", "getCurrentToppingsIntent", {});
-          this.currentState = this.grabState<PizzaState>(await this.getCurrentStateName());
-          await this.currentState.sessionFactory().set("amountOfPizzas", "1");
-          await this.currentState.sessionFactory().set("pizza1", JSON.stringify(myToppings));
+          const temporaryToppingArray = [];
+          await this.prepareCurrentStateForTest("PizzaState", "getCurrentToppingsIntent");
+          await this.sessionFactory().set("temporaryToppingArray", JSON.stringify(temporaryToppingArray));
           await this.runMachineAndGetResults("PizzaState");
         });
 
@@ -119,11 +128,9 @@ describe("PizzaState", function() {
 
     describe("noGenericIntent", function() {
       beforeEach(async function(this: CurrentThisContext) {
-        const myToppings = ["salami", "gouda", "spinach"];
+        const temporaryToppingArray = ["salami", "gouda", "spinach"];
         await this.prepareCurrentStateForTest("PizzaState", "noGenericIntent");
-        this.currentState = this.grabState<PizzaState>(await this.getCurrentStateName());
-        await this.currentState.sessionFactory().set("amountOfPizzas", "1");
-        await this.currentState.sessionFactory().set("pizza1", JSON.stringify(myToppings));
+        await this.currentState.sessionFactory().set("temporaryToppingArray", JSON.stringify(temporaryToppingArray));
         await this.runMachineAndGetResults("PizzaState");
       });
 

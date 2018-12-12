@@ -12,22 +12,6 @@ describe("MainState", function() {
     });
 
     describe("invokeGenericIntent", function() {
-      describe("test amount of pizzas", function() {
-        beforeEach(async function(this: CurrentThisContext) {
-          await this.prepareCurrentStateForTest("MainState", "invokeGenericIntent");
-          this.currentState = this.grabState<MainState>(await this.getCurrentStateName());
-          // The current states sessionFactory received from the container
-          await this.sessionFactory().set("amountOfPizzas", "1");
-          await this.runMachineAndGetResults("MainState");
-        });
-
-        it("stores amount of pizzas into session", async function(this: CurrentThisContext) {
-          const amountOfPizzas = (await this.sessionFactory().get("amountOfPizzas")) || 0;
-          expect(+amountOfPizzas).toBe(1);
-          expect(+amountOfPizzas).not.toBe(0);
-        });
-      });
-
       describe("prompt", function() {
         beforeEach(async function(this: CurrentThisContext) {
           await this.prepareCurrentStateForTest("MainState", "invokeGenericIntent");
@@ -86,6 +70,7 @@ describe("MainState", function() {
 
       it("says generic goodbye and ends session", async function(this: CurrentThisContext) {
         expect(await this.responseHandlerResults.voiceMessage!.text).toContain((await this.translateValuesFor()("root.cancelGenericIntent"))[0]);
+        expect(this.responseHandlerResults).toEndSession();
       });
     });
   });

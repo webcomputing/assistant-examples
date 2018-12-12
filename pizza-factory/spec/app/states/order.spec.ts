@@ -13,22 +13,6 @@ describe("OrderState", function() {
 
   describe("on platform = alexa", function() {
     describe("yesGenericIntent", function() {
-      describe("increment amount of pizzas", function() {
-        beforeEach(async function(this: CurrentThisContext) {
-          await this.prepareCurrentStateForTest("OrderState", "yesGenericIntent");
-          this.currentState = this.grabState<OrderState>(await this.getCurrentStateName());
-          await this.sessionFactory().set("amountOfPizzas", "1");
-          await this.runMachineAndGetResults("OrderState");
-        });
-
-        it("increments the amount of Pizzas", async function(this: CurrentThisContext) {
-          const amountOfPizzas = (await this.sessionFactory().get("amountOfPizzas")) || 0;
-          const newAmountOfPizzas: number = +amountOfPizzas + 1;
-          expect(+newAmountOfPizzas).toBeGreaterThan(1);
-          expect(newAmountOfPizzas).toBeGreaterThan(+amountOfPizzas);
-        });
-      });
-
       describe("start new order", function() {
         beforeEach(async function(this: CurrentThisContext) {
           await this.prepareCurrentStateForTest("OrderState", "yesGenericIntent");
@@ -47,23 +31,58 @@ describe("OrderState", function() {
     });
 
     describe("noGenericIntent", function() {
-      describe("order 1 pizza", function() {
+      describe("order 1 pizza with 1 topping", function() {
         beforeEach(async function(this: CurrentThisContext) {
-          const myToppings = ["salami", "gouda", "spinach"];
+          const pizzasWithToppingsArray = [["salami"]];
           await this.prepareCurrentStateForTest("OrderState", "noGenericIntent");
-          await this.sessionFactory().set("amountOfPizzas", "1");
-          await this.sessionFactory().set("pizza1", JSON.stringify(myToppings));
+          await this.sessionFactory().set("pizzasWithToppingsArray", JSON.stringify(pizzasWithToppingsArray));
           await this.runMachineAndGetResults("OrderState");
         });
 
         it("returns the list of pizzas", async function(this: CurrentThisContext) {
           expect(await this.responseHandlerResults.voiceMessage!.text).toContain(
-            (await this.translateValuesFor()("orderState.noGenericIntent", { pizzas: "a pizza with salami, gouda and spinach! Your pizza" }))[0]
+            (await this.translateValuesFor()("orderState.noGenericIntent", {
+              pizzas: `a pizza with salami! ${await this.translateValuesFor()("root.pizzaDelivery.yourPizza")}`,
+            }))[0]
           );
         });
       });
 
-      fdescribe("order more pizzas", function() {
+      describe("order 1 pizza with 2 toppings", function() {
+        beforeEach(async function(this: CurrentThisContext) {
+          const pizzasWithToppingsArray = [["salami", "gouda"]];
+          await this.prepareCurrentStateForTest("OrderState", "noGenericIntent");
+          await this.sessionFactory().set("pizzasWithToppingsArray", JSON.stringify(pizzasWithToppingsArray));
+          await this.runMachineAndGetResults("OrderState");
+        });
+
+        it("returns the list of pizzas", async function(this: CurrentThisContext) {
+          expect(await this.responseHandlerResults.voiceMessage!.text).toContain(
+            (await this.translateValuesFor()("orderState.noGenericIntent", {
+              pizzas: `a pizza with salami and gouda! ${await this.translateValuesFor()("root.pizzaDelivery.yourPizza")}`,
+            }))[0]
+          );
+        });
+      });
+
+      describe("order 1 pizza with 3 toppings", function() {
+        beforeEach(async function(this: CurrentThisContext) {
+          const pizzasWithToppingsArray = [["salami", "gouda", "spinach"]];
+          await this.prepareCurrentStateForTest("OrderState", "noGenericIntent");
+          await this.sessionFactory().set("pizzasWithToppingsArray", JSON.stringify(pizzasWithToppingsArray));
+          await this.runMachineAndGetResults("OrderState");
+        });
+
+        it("returns the list of pizzas", async function(this: CurrentThisContext) {
+          expect(await this.responseHandlerResults.voiceMessage!.text).toContain(
+            (await this.translateValuesFor()("orderState.noGenericIntent", {
+              pizzas: `a pizza with salami, gouda and spinach! ${await this.translateValuesFor()("root.pizzaDelivery.yourPizza")}`,
+            }))[0]
+          );
+        });
+      });
+
+      describe("order more pizzas", function() {
         beforeEach(async function(this: CurrentThisContext) {
           const pizzasWithToppingsArray = [["tuna"], ["salami", "gouda", "spinach"], ["gouda", "tuna", "tomatoes"], ["onions", "spinach"]];
           await this.prepareCurrentStateForTest("OrderState", "noGenericIntent");
@@ -71,12 +90,12 @@ describe("OrderState", function() {
           await this.runMachineAndGetResults("OrderState");
         });
 
-        fit("returns the list of pizzas", async function(this: CurrentThisContext) {
+        it("returns the list of pizzas", async function(this: CurrentThisContext) {
           expect(await this.responseHandlerResults.voiceMessage!.text).toContain(
             (await this.translateValuesFor()("orderState.noGenericIntent", {
-              pizzas:
-                "a pizza with tuna, a pizza with salami, gouda and spinach, a pizza with gouda, tuna and tomatoes and a pizza with onions and spinach" +
-                `! ${await this.translateValuesFor()("root.beginning.they")}`,
+              pizzas: `a pizza with tuna, a pizza with salami, gouda and spinach, a pizza with gouda, tuna and tomatoes and a pizza with onions and spinach! ${await this.translateValuesFor()(
+                "root.beginning.they"
+              )}`,
             }))[0]
           );
         });
@@ -88,8 +107,8 @@ describe("OrderState", function() {
           await this.runMachineAndGetResults("OrderState");
         });
 
-        it("should end the pizza factory", async function(this: CurrentThisContext) {
-          expect(this.responseHandlerResults.shouldSessionEnd).toBeTruthy();
+        it("ends session", async function(this: CurrentThisContext) {
+          expect(this.responseHandlerResults).toEndSession();
         });
       });
     });
