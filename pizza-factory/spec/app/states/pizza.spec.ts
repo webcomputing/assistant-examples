@@ -134,7 +134,7 @@ describe("PizzaState", function() {
         await this.runMachineAndGetResults("PizzaState");
       });
 
-      it("finishes adding toppings to pizza and return topping List", async function(this: CurrentThisContext) {
+      it("finishes adding toppings to pizza and returns topping List", async function(this: CurrentThisContext) {
         expect(await this.responseHandlerResults.voiceMessage!.text).toContain(
           (await this.translateValuesFor()("pizzaState.noGenericIntent", { topping: "salami, gouda and spinach" }))[0]
         );

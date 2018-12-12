@@ -19,7 +19,7 @@ describe("OrderState", function() {
           await this.runMachineAndGetResults("OrderState");
         });
 
-        it("invites the user to add toppings to another pizza", async function(this: CurrentThisContext) {
+        it("invites the user to adds toppings to another pizza", async function(this: CurrentThisContext) {
           expect(await this.responseHandlerResults.voiceMessage!.text).toContain((await this.translateValuesFor()("orderState.yesGenericIntent"))[0]);
         });
 
