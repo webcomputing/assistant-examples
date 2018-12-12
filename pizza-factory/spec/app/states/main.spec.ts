@@ -41,11 +41,11 @@ describe("MainState", function() {
         await this.runMachineAndGetResults("MainState");
       });
 
-      it("order pizza", async function(this: CurrentThisContext) {
+      it("orders pizza", async function(this: CurrentThisContext) {
         expect(await this.responseHandlerResults.voiceMessage!.text).toContain((await this.translateValuesFor()("mainState.orderPizzaIntent"))[0]);
       });
 
-      it("transit to PizzaState", async function() {
+      it("transits to PizzaState", async function() {
         const state = await this.getCurrentStateName();
         expect(state).toEqual("PizzaState");
       });

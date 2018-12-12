@@ -140,7 +140,7 @@ describe("PizzaState", function() {
         );
       });
 
-      it("transit to OrderState", async function() {
+      it("transits to OrderState", async function() {
         const state = await this.getCurrentStateName();
         expect(state).toEqual("OrderState");
       });
