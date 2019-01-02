@@ -22,17 +22,6 @@ export class OrderState extends ApplicationState {
    * This intent is called, if the user wants to add ingredients to another pizza
    */
   public async yesGenericIntent(machine: Transitionable) {
-    const pizzasWithToppingsArray: string[][] = this.parseStringifiedPizzasWithToppingsArrayToStringArray(
-      await this.sessionFactory().get("pizzasWithToppingsArray")
-    );
-
-    // push temporaryToppingArray to pizzasWithToppingsArray
-    pizzasWithToppingsArray.push(this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get("temporaryToppingArray")));
-
-    await this.sessionFactory().set("pizzasWithToppingsArray", JSON.stringify(pizzasWithToppingsArray));
-    // clear temporaryToppingArray
-    await this.sessionFactory().set("temporaryToppingArray", JSON.stringify([]));
-
     this.prompt(this.t());
     return machine.transitionTo("PizzaState");
   }

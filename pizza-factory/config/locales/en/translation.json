@@ -3,17 +3,25 @@
         "cancelGenericIntent": "{Goodbye!|See you later!}",
         "stopGenericIntent": {
             "alexa": [
-              "Goodbye!",
-              "<say-as interpret-as=\"interjection\">See you later!</say-as>",
-              "See you!"
+                "Goodbye!",
+                "<say-as interpret-as=\"interjection\">See you later!</say-as>",
+                "See you!"
             ],
             "google": [
                 "Goodbye!",
                 "See you later!",
                 "See you!"
             ]
-          },
-        "helpGenericIntent": "I don't know how I can help you out there, sorry...",
+        },
+        "unhandledGenericIntent": [
+            "Sorry, I didn't understand that.",
+            "Ouch, didn't understand you.",
+            "I am sorry, can you please repeat your question"
+        ],
+        "getToppingsIntent": [
+            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} You can add salami, tuna, gouda, onions, tomatoes or spinach to your pizza!",
+            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} The ingredients are: salami, tuna, gouda, onions, tomatoes or spinach!"
+        ],
         "connectors": {
             "and": "and"
         },
@@ -30,10 +38,6 @@
             "alexa": "Welcome, Alexa user to my pizza factory!",
             "google": "Welcome, Google user to my pizza factory!"            
         },
-        "getToppingsIntent": [
-            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} You can add salami, tuna, gouda, onions, tomatoes or spinach to your pizza!",
-            "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} The ingredients are: salami, tuna, gouda, onions, tomatoes or spinach!"
-        ],
         "orderPizzaIntent": "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} Which toppings do you want to add?",  
         "helpGenericIntent": "You can order your pizza or get a list of available toppings!"
     },
@@ -43,13 +47,21 @@
             "addedToppings": "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} You have added {{topping}} to your pizza!",
             "noToppings": "I'm sorry, you have not selected any toppings yet!"
         },
-        "yesGenericIntent": "{Alright|Okay}! Let's add another topping to your pizza!",
-        "noGenericIntent": "{Alright|Okay}! Your pizza looks great! You have added {{topping}} to your pizza! Do you want to order another pizza?",
-        "helpGenericIntent": "$t(mainState.getToppingsIntent)"
+        "yesGenericIntent": {
+            "addedToppings": "{Alright|Okay}! Let's add another topping to your pizza!",
+            "noToppings": "I'm sorry, you have not selected any toppings yet!"
+        },
+        "noGenericIntent": {
+            "addedToppings": "{Alright|Okay}! Your pizza looks great! You have added {{topping}} to your pizza! Do you want to order another pizza?",
+            "noToppings": "I'm sorry, you have not selected any toppings yet!"
+        },
+        "helpGenericIntent": "$t(root.getToppingsIntent)",
+        "unhandledGenericIntent": "Sorry, I didn't understand that. You can only choose predefined toppings. If you dont know which toppings are available, you can ask me <break time='200ms'/>\"Which toppings can I add to my pizza\"."        
     },
     "orderState": {
         "yesGenericIntent": "{Alright|Okay}! Let's add toppings to another pizza! Which toppings do you want to add?",
-        "noGenericIntent": "{Alright|Okay}! You order {{pizzas}} will arrive in a few minutes! Enjoy it!"
+        "noGenericIntent": "{Alright|Okay}! You order {{pizzas}} will arrive in a few minutes! Enjoy it!",
+        "helpGenericIntent": "{Love to help you!|No problem!|You are welcome!|Okay!|Alright!|} You can order another pizza or continue your ordering process"
     },
     "promptState": {
         "topping": "{Which topping do you want to add?|You forgot to tell me the topping!}"

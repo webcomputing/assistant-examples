@@ -57,8 +57,15 @@ export class PizzaState extends ApplicationState {
   /**
    * This intent is called, if the user wants to add another topping to his pizza
    */
-  public yesGenericIntent() {
-    this.prompt(this.t());
+  public async yesGenericIntent() {
+    const temporaryToppingArray: string[] = this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get("temporaryToppingArray"));
+
+    // check, if temporaryToppingArray is empty
+    if (temporaryToppingArray.length === 0) {
+      this.prompt(this.t(".noToppings"));
+    } else {
+      this.prompt(this.t(".addedToppings"));
+    }
   }
 
   /**
@@ -68,7 +75,23 @@ export class PizzaState extends ApplicationState {
   public async noGenericIntent(machine: Transitionable) {
     const temporaryToppingArray: string[] = this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get("temporaryToppingArray"));
 
-    this.prompt(this.t({ topping: await this.parseToppingListToReadableString(temporaryToppingArray) }));
-    return machine.transitionTo("OrderState");
+    // check, if temporaryToppingArray is empty
+    if (temporaryToppingArray.length === 0) {
+      this.prompt(this.t(".noToppings"));
+    } else {
+      const pizzasWithToppingsArray: string[][] = this.parseStringifiedPizzasWithToppingsArrayToStringArray(
+        await this.sessionFactory().get("pizzasWithToppingsArray")
+      );
+
+      // push temporaryToppingArray to pizzasWithToppingsArray
+      pizzasWithToppingsArray.push(this.parseStringifiedToppingArrayToStringArray(await this.sessionFactory().get("temporaryToppingArray")));
+
+      await this.sessionFactory().set("pizzasWithToppingsArray", JSON.stringify(pizzasWithToppingsArray));
+      // clear temporaryToppingArray
+      await this.sessionFactory().set("temporaryToppingArray", JSON.stringify([]));
+
+      this.prompt(this.t(".addedToppings", { topping: await this.parseToppingListToReadableString(temporaryToppingArray) }));
+      return machine.transitionTo("OrderState");
+    }
   }
 }

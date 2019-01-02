@@ -1,16 +1,21 @@
 {
     "getToppingsIntent": [
-        "{I want to get|What are|Give me} {all|the} toppings"
+        "{I want to get|What are|Give me} the toppings",
+        "Tell me {all|the} toppings",
+        "Which toppings can I add to my pizza"
     ],
     "orderPizzaIntent": [
-        "{I want to|} order {my|a} pizza"
+        "{I want to|I would like to|} order a pizza",
+        "Add toppings to {my|a} pizza"
     ],
     "addToppingToPizzaIntent": [
-        "{I want to|Please|} add {{topping}} {to my pizza|to the pizza|}",
-        "{{topping}}"
+        "{I want to|Please|} add {{topping}} to my pizza",
+        "I would like to add {{topping}} {to my pizza|to the pizza|}"
     ],
     "getCurrentToppingsIntent": [
         "What's on my pizza so far",
-        "{Can you please|} {give me|return} {the} current toppings {on my pizza|}"
+        "{Can you please|Would you} give me the current toppings on my pizza",
+        "Can you {give me|return} the current toppings",
+        "Return the current toppings {on my pizza|}"
     ]
 }

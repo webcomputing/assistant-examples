@@ -1,8 +1,8 @@
 import { CurrentSessionFactory, EntityDictionary, injectionNames, PlatformGenerator, State } from "assistant-source";
 import { PromptStateMixin, PromptStateMixinRequirements } from "assistant-validations";
 import { inject, injectable, unmanaged } from "inversify";
-import { ApplicationState } from "./application";
 import { MergedSetupSet } from "../../config/handler";
+import { ApplicationState } from "./application";
 
 /**
  * This small class is needed to apply the PromptStateMixin since TypeScript does not allow type-specific constructor mixins.

@@ -120,33 +120,69 @@ describe("PizzaState", function() {
     });
 
     describe("yesGenericIntent", function() {
-      beforeEach(async function(this: CurrentThisContext) {
-        await this.prepareCurrentStateForTest("PizzaState", "yesGenericIntent");
-        await this.runMachineAndGetResults("PizzaState");
+      describe("pizza has no toppings yet", function() {
+        beforeEach(async function(this: CurrentThisContext) {
+          this.params.temporaryToppingArray = [];
+          await this.prepareCurrentStateForTest("PizzaState", "yesGenericIntent");
+          await this.sessionFactory().set("temporaryToppingArray", JSON.stringify(this.params.temporaryToppingArray));
+          await this.runMachineAndGetResults("PizzaState");
+        });
+
+        it("returns a message that the pizza has no toppings yet", async function(this: CurrentThisContext) {
+          expect(await this.responseHandlerResults.voiceMessage!.text).toContain(
+            (await this.translateValuesFor()("pizzaState.yesGenericIntent.noToppings"))[0]
+          );
+        });
       });
 
-      it("offers the user to add another topping to the pizza", async function(this: CurrentThisContext) {
-        expect(await this.responseHandlerResults.voiceMessage!.text).toContain((await this.translateValuesFor()("pizzaState.yesGenericIntent"))[0]);
+      describe("pizza has a toppings", function() {
+        beforeEach(async function(this: CurrentThisContext) {
+          this.params.temporaryToppingArray = ["salami"];
+          await this.prepareCurrentStateForTest("PizzaState", "yesGenericIntent");
+          await this.sessionFactory().set("temporaryToppingArray", JSON.stringify(this.params.temporaryToppingArray));
+          await this.runMachineAndGetResults("PizzaState");
+        });
+
+        it("offers the user to add another topping to the pizza", async function(this: CurrentThisContext) {
+          expect(await this.responseHandlerResults.voiceMessage!.text).toContain(
+            (await this.translateValuesFor()("pizzaState.yesGenericIntent.addedToppings"))[0]
+          );
+        });
       });
     });
 
-    describe("noGenericIntent", function() {
-      beforeEach(async function(this: CurrentThisContext) {
-        this.params.temporaryToppingArray = ["salami", "gouda", "spinach"];
-        await this.prepareCurrentStateForTest("PizzaState", "noGenericIntent");
-        await this.currentState.sessionFactory().set("temporaryToppingArray", JSON.stringify(this.params.temporaryToppingArray));
-        await this.runMachineAndGetResults("PizzaState");
+    fdescribe("noGenericIntent", function() {
+      describe("pizza has no toppings yet", function() {
+        beforeEach(async function(this: CurrentThisContext) {
+          this.params.temporaryToppingArray = [];
+          await this.prepareCurrentStateForTest("PizzaState", "noGenericIntent");
+          await this.sessionFactory().set("temporaryToppingArray", JSON.stringify(this.params.temporaryToppingArray));
+          await this.runMachineAndGetResults("PizzaState");
+        });
+
+        it("returns a message that the pizza has no toppings yet", async function(this: CurrentThisContext) {
+          expect(await this.responseHandlerResults.voiceMessage!.text).toContain((await this.translateValuesFor()("pizzaState.noGenericIntent.noToppings"))[0]);
+        });
       });
 
-      it("finishes adding toppings to pizza and returns topping List", async function(this: CurrentThisContext) {
-        expect(await this.responseHandlerResults.voiceMessage!.text).toContain(
-          (await this.translateValuesFor()("pizzaState.noGenericIntent", { topping: "salami, gouda and spinach" }))[0]
-        );
-      });
+      describe("pizza has a toppings", function() {
+        beforeEach(async function(this: CurrentThisContext) {
+          this.params.temporaryToppingArray = ["salami", "gouda", "spinach"];
+          await this.prepareCurrentStateForTest("PizzaState", "noGenericIntent");
+          await this.sessionFactory().set("temporaryToppingArray", JSON.stringify(this.params.temporaryToppingArray));
+          await this.runMachineAndGetResults("PizzaState");
+        });
 
-      it("transits to OrderState", async function() {
-        this.params.state = await this.getCurrentStateName();
-        expect(this.params.state).toEqual("OrderState");
+        it("finishes adding toppings to pizza and returns topping List", async function(this: CurrentThisContext) {
+          expect(await this.responseHandlerResults.voiceMessage!.text).toContain(
+            (await this.translateValuesFor()("pizzaState.noGenericIntent.addedToppings", { topping: "salami, gouda and spinach" }))[0]
+          );
+        });
+
+        it("transits to OrderState", async function() {
+          this.params.state = await this.getCurrentStateName();
+          expect(this.params.state).toEqual("OrderState");
+        });
       });
     });
   });

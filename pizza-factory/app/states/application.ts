@@ -31,6 +31,13 @@ export class ApplicationState extends BaseState<MergedAnswerTypes, MergedHandler
   }
 
   /**
+   * return a list of all available toppings
+   */
+  public getToppingsIntent() {
+    this.prompt(this.t());
+  }
+
+  /**
    * Parse stringified topping array and return an string array
    * Either its filled with toppings or if undefined its empty
    * @param {string|undefined} unparsedToppingArray

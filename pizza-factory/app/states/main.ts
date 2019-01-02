@@ -36,11 +36,4 @@ export class MainState extends ApplicationState {
     this.prompt(this.t());
     return machine.transitionTo("PizzaState");
   }
-
-  /**
-   * return a list of all available toppings
-   */
-  public getToppingsIntent() {
-    this.prompt(this.t());
-  }
 }

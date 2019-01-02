@@ -24,17 +24,6 @@ describe("MainState", function() {
       });
     });
 
-    describe("getToppingsIntent", function() {
-      beforeEach(async function(this: CurrentThisContext) {
-        await this.prepareCurrentStateForTest("MainState", "getToppingsIntent");
-        await this.runMachineAndGetResults("MainState");
-      });
-
-      it("lists all available toppings", async function(this: CurrentThisContext) {
-        expect(await this.responseHandlerResults.voiceMessage!.text).toContain((await this.translateValuesFor()("mainState.getToppingsIntent"))[0]);
-      });
-    });
-
     describe("orderPizzaIntent", function() {
       beforeEach(async function(this: CurrentThisContext) {
         await this.prepareCurrentStateForTest("MainState", "orderPizzaIntent");
@@ -59,18 +48,6 @@ describe("MainState", function() {
 
       it("tries to help", async function(this: CurrentThisContext) {
         expect(await this.responseHandlerResults.voiceMessage!.text).toContain((await this.translateValuesFor()("mainState.helpGenericIntent"))[0]);
-      });
-    });
-
-    describe("cancelGenericIntent", function() {
-      beforeEach(async function(this: CurrentThisContext) {
-        await this.prepareCurrentStateForTest("MainState", "cancelGenericIntent");
-        await this.runMachineAndGetResults("MainState");
-      });
-
-      it("says generic goodbye and ends session", async function(this: CurrentThisContext) {
-        expect(await this.responseHandlerResults.voiceMessage!.text).toContain((await this.translateValuesFor()("root.cancelGenericIntent"))[0]);
-        expect(this.responseHandlerResults).toEndSession();
       });
     });
   });
